@@ -53,10 +53,13 @@
 <div id="holograph">
 <h1>This space is meant for carausel</h1>
 </div>
+<form method="post" name="contact" action="two">
+sector: <input type="text" name="sector" placeholder="sector"><br>
+<input type="submit" value="submit">
+</form>
 </div>
 <div id="footer">
 <! this represents example for retrieving data from controller ie year!>
-<p style="text-align:center;"><font size="4" color="white">Copyright &copy Newintown.in <?php echo "$year"?></font></p>
+<p style="text-align:center;"><font size="4" color="white">Copyright &copy Newintown.in </font></p>
 </div>
 </body>
-</html>
