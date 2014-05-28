@@ -5,6 +5,11 @@ class Controller1 extends CI_Controller{
 	public function index(){
 		echo "this is the function named index";
 	}
+	public function four(){
+		echo $_GET["lng"];
+		echo "<br>";
+		echo $_GET["lat"];
+	}
 	public function three(){
 		$state = 0;
 		if($_GET["2BHK"] == "yes"):

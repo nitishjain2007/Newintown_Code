@@ -1,6 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<!--<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>-->
+<script>
+function g(){
+	var lng = document.getElementById('cityLng').value;
+	var lat = document.getElementById('cityLat').value;
+	window.location="http://localhost/ci/index.php/controller1/four?lng="+lng+"&lat="+lat;
+}
+function initialize(){
+var defaultBounds = new google.maps.LatLngBounds(
+	new google.maps.LatLng(28.459496500000000000, 77.026638300000060000)
+	);
+//document.getElementById('searchTextField').innerHTML += ' gurgaon';
+//document.getElementById('searchTextField').innerHTML =
+var input1 = document.getElementById('searchTextField');
+//var input2 = document.getElementById('3');
+//input3 = input1 + input2;
+//alert(input3);
+var options = {
+	//types: ['administrative_area1': 'gurgoan'],
+	bounds: defaultBounds,
+	componentRestrictions: {country: 'in'}
+};
+var autocomplete = new google.maps.places.Autocomplete(input1, options);
+google.maps.event.addListener(autocomplete, 'place_changed', function () {
+            var place = autocomplete.getPlace();
+            document.getElementById('city2').value = place.name;
+            document.getElementById('cityLat').value = place.geometry.location.lat();
+            document.getElementById('cityLng').value = place.geometry.location.lng();
+        });
+}
+google.maps.event.addDomListener(window, 'load', initialize);
+</script>
 <style>
 #body{
 	margin-left:auto;
@@ -40,6 +73,7 @@
 	margin-top: -1.4%;
 	margin-bottom: -1.4%;
 }
+.pac-item: hover{background-color: brown! important;}
 </style>
 </head>
 <body>
@@ -53,10 +87,12 @@
 <div id="holograph">
 <h1>This space is meant for carausel</h1>
 </div>
-<form method="post" name="contact" action="two">
-sector: <input type="text" name="sector" placeholder="sector"><br>
-<input type="submit" value="submit">
-</form>
+<!--sector: <input type="text" name="sector" placeholder="sector"><br>-->
+<input id="searchTextField" type="text" size="50" style="background:rgba(0,0,0,0);color: white;"><br>
+<input type="hidden" id="city2" name="city2" />
+<input type="hidden" id="cityLat" name="cityLat" />
+<input type="hidden" id="cityLng" name="cityLng" />  
+<button type="submit" onclick="g()">submit</button>
 </div>
 <div id="footer">
 <! this represents example for retrieving data from controller ie year!>
