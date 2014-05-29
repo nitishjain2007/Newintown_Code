@@ -4,7 +4,11 @@
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
 <!--<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>-->
 <script>
+function gdelay(){
+	setTimeout("g()",2000);
+}
 function g(){
+	//alert("hi");
 	var lng = document.getElementById('cityLng').value;
 	var lat = document.getElementById('cityLat').value;
 	window.location="http://localhost/ci/index.php/controller1/four?lng="+lng+"&lat="+lat;
@@ -33,6 +37,12 @@ google.maps.event.addListener(autocomplete, 'place_changed', function () {
         });
 }
 google.maps.event.addDomListener(window, 'load', initialize);
+function h(){
+	alert("hi");
+	window.setTimeout(function(){
+		document.forms['places'].submit();
+	}, 10000);
+}
 </script>
 <style>
 #body{
@@ -88,11 +98,11 @@ google.maps.event.addDomListener(window, 'load', initialize);
 <h1>This space is meant for carausel</h1>
 </div>
 <!--sector: <input type="text" name="sector" placeholder="sector"><br>-->
-<input id="searchTextField" type="text" size="50" style="background:rgba(0,0,0,0);color: white;"><br>
+<input id="searchTextField" type="text" size="50" style="background:rgba(0,0,0,0);color: white;" onKeydown="Javascript:    if(event.keyCode==13)gdelay();"><br>
 <input type="hidden" id="city2" name="city2" />
 <input type="hidden" id="cityLat" name="cityLat" />
 <input type="hidden" id="cityLng" name="cityLng" />  
-<button type="submit" onclick="g()">submit</button>
+<button type="submit" onclick="gdelay()">submit</button>
 </div>
 <div id="footer">
 <! this represents example for retrieving data from controller ie year!>
