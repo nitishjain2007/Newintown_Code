@@ -6,9 +6,19 @@ class Controller1 extends CI_Controller{
 		echo "this is the function named index";
 	}
 	public function four(){
-		echo $_GET["lng"];
-		echo "<br>";
-		echo $_GET["lat"];
+		$lngstr = $_GET["lng"]; //specifies longitude in string
+		$latstr = $_GET["lat"]; //specifies latitude in string
+		$lngdec = floatval($lngstr);
+		$latdec = floatval($latstr); 
+		$lat1 = 28.491743000000000000;
+		$lng1 = 77.070836999999980000;
+		$theta = $lng1 - $lngdec;
+		$dist = sin(deg2rad($lat1)) * sin(deg2rad($latdec)) + cos(deg2rad($lat1)) * cos(deg2rad($latdec)) * cos(deg2rad($theta));
+		$dist = acos($dist);
+		$dist = rad2deg($dist);	
+		$kilometres = $dist * 60 * 1.1515 * 1.609344;
+		echo $kilometres;
+		echo " km";
 	}
 	public function three(){
 		$state = 0;
