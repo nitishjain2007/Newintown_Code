@@ -50,7 +50,7 @@ $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
 $db['default']['username'] = 'root';
-$db['default']['password'] = 'ntsh.jain';
+$db['default']['password'] = 'nitish';
 $db['default']['database'] = 'nitish';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';

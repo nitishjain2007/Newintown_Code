@@ -1,6 +1,6 @@
 <?php 
 class Users extends CI_Model{
-	function getAll($sector){
+	function getAll11($sector){
 		$this->db->select('*');
 		$this->db->from('properties');
 		//$this->db->where_in('id',$ids);
@@ -27,6 +27,21 @@ class Users extends CI_Model{
 		$this->db->where_in('type',$databasevar);
 		$f = $this->db->get();
 		return $f;
+	}
+	function getall($advancevars){
+		$this->db->select('*');
+		$this->db->from('pg');
+		$this->db->where($advancevars);
+		$result = $this->db->get();
+		return $result;
+	}
+	function getfiltered($databasevar,$advancevars){
+		$this->db->select('*');
+		$this->db->from('pg');
+		$this->db->where_in('house_type',$databasevar);
+		$this->db->where($advancevars);
+		$result = $this->db->get();
+		return $result;
 	}
 }
 ?>
