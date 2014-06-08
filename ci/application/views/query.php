@@ -7,7 +7,12 @@ var threebhk = 0;
 var fourbhk = 0;
 var all = 0;
 var ad = 0;
+var advancestate = 0;
 var typearray = ["twobhk", "threebhk", "fourbhk"];
+function statechange(){
+  alert("hi");
+  document.getElementById("statechange").innerText = "RemoveAdvancefilters";
+}
 function loadXMLDocdelay(types){
   //alert(types);
   setTimeout("loadXMLDoc("+ types + ")",1);
@@ -80,6 +85,7 @@ window.onload = loadXMLDocdelay("all");
 <button type="button" id="twobhk" onclick="loadXMLDoc(this.id)">2BHK</button>
 <button type="button" id="threebhk" onclick="loadXMLDoc(this.id)">3BHK</button>
 <button type="button" id="fourbhk" onclick="loadXMLDoc(this.id)">4BHK</button>
+<button type="button" id="statechange" onclick="statechange()">show advancefilters</button>
 <div id="advancefilters">
   <input type="checkbox" id="ad" name="advance[]" value="ac" onchange="loadXMLDoc(this.id)"/>ac<br>
   <input type="checkbox" id="ad" name="advance[]" value="fridge" onchange="loadXMLDoc(this.id)"/>fridge<br>
