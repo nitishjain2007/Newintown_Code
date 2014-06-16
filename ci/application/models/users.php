@@ -43,5 +43,25 @@ class Users extends CI_Model{
 		$result = $this->db->get();
 		return $result;
 	}
+	function authenticate($authentications){
+		$this->db->select('*');
+		$this->db->from('users');
+		$this->db->where($authentications);
+		$recievedcreddentials = $this->db->get();
+		$dummy = array();
+		foreach($recievedcreddentials->result() as $d){
+			$dummy[] = $d;
+		}
+		if(count($dummy) == 0){
+			$result = 'false';
+		}
+		else{
+			$result = 'true';
+		}
+		return $result;
+	}
+	function insertdata($values){
+		$this->db->insert('listing',$values);
+	}
 }
 ?>

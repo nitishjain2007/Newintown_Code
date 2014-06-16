@@ -61,11 +61,109 @@ class Controller1 extends CI_Controller{
 	public function query(){
 		$lngstr = $_GET["lng"]; //specifies longitude in string
 		$latstr = $_GET["lat"]; //specifies latitude in string
+		$type = $_GET["type"]; //specifies the type		 
 		$data = array('lngstr' => $lngstr, 'latstr' => $latstr);
 		$this->load->view("query", $data);
 	}
 	public function main(){
-		$this->load->view("main");
+		$list = "no";
+		$login = "no";
+		$logout = "no";
+		if(isset($_POST['logout'])){
+			$logout = "yes";
+			delete_cookie("log");
+		}
+		if(isset($_POST['name'])){
+			$list = "yes";
+			$name1 = $_POST['name'];
+			$email1 = $_POST['email'];
+			$phoneno1 = $_POST['phoneno'];
+			$data1 = array('name' => $name1, 'email' => $email1, 'phoneno' => $phoneno1);
+			$this->load->model('users');
+			$this->users->insertdata($data1);
+		}
+		if(!$this->input->cookie('log')){
+			$cookie = array(
+				'name'   => 'log',
+        		'value'  => 'loggedout',
+        		'expire' => '1000000',
+        		'path'   => '/',
+        		'prefix' => '',
+    		);
+    	$this->input->set_cookie($cookie);
+    	$_COOKIE['log'] = 'loggedout';
+    	$data = array("log" => $this->input->cookie('log'),"list" => $list,"login" =>$login,"logout"=>$logout);
+    	$this->load->view("main",$data);
+		}
+		else{
+			if($this->input->cookie('log')=="loggedout" || $this->input->cookie('log') == "wrong"){
+				if(isset($_POST['username'])){
+					$this->load->model('users');
+					$credentials = array("username" => $_POST['username'], "password" => $_POST['password']);
+					$f = $this->users->authenticate($credentials);
+					if($f == "true"){
+						$cookie1 = array(
+							'name' => 'newuser',
+							'value' => $_POST['username'],
+							'expire' => '100000',
+							'path' => '/',
+							'prefix' => '',
+						);
+						$cookie = array(
+							'name'   => 'log',
+		        			'value'  => 'loggedin',
+		        			'expire' => '100000',
+		        			'path'   => '/',
+		        			'prefix' => '',
+		    			);
+		    			$login = "yes";
+		    			$logout = "no";
+						$this->input->set_cookie($cookie1);
+						$this->input->set_cookie($cookie);
+						$_COOKIE['log'] = 'loggedin';
+						$_COOKIE['newuser'] = $_POST["username"];
+						//echo $_POST["username"];
+						$data = array("log" => $this->input->cookie('log'), "user" => $this->input->cookie('newuser'), "list" => $list,"login" =>$login,"logout" => $logout);
+						$this->load->view("main",$data);
+					}
+					else{
+						$cookie = array(
+							'name' => 'log',
+							'value' => 'wrong',
+							'expire' => '100000',
+							'path' => '/',
+							'prefix' => '',
+							);
+						$this->input->set_cookie($cookie);
+						$_COOKIE['log'] = "wrong";
+						$data = array("log" => $this->input->cookie('log'),"list"=>$list,"login" => $login,"logout" => $logout);
+						$this->load->view("main",$data);
+					}
+				}
+				else{
+					$data = array("log" => $this->input->cookie('log'),"list" => $list,"login"=>$login,"logout"=>$logout);
+					$this->load->view("main",$data);
+				}
+			}
+			else{
+				$data = array("log" => $this->input->cookie('log'), "user" => $this->input->cookie('newuser'),"list"=>$list,"login"=>$login,"logout"=>$logout);
+				$this->load->view("main",$data);
+			}
+		}
+	}
+	public function test(){
+		if(isset($_POST["username"])){
+			$user = $_POST["username"];
+			echo $user;
+			$sessiondata = array(
+				'username' => $user);
+			$this->session->set_userdata($sessiondata);
+		}
+		$this->load->view("test");
+	}
+	public function test1(){
+		$value = $this->session->all_userdata();
+		echo $value['username'];
 	}
 }
 ?>

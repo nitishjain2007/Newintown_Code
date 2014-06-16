@@ -103,6 +103,7 @@ window.onload = loadXMLDocdelay("all");
   <div id="types"></div>
   <div id="lng"><?php echo $lngstr ?></div>
   <div id="lat"><?php echo $latstr ?></div> 
+  <div id="type"><?php echo $type ?></div>
 </div>
 </body>
 </html>
