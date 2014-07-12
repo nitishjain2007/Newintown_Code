@@ -60,6 +60,25 @@ class Users extends CI_Model{
 		}
 		return $result;
 	}
+	function getimages($data){
+		$this->db->select($data);
+		$this->db->from('pg');
+		$result = $this->db->get();
+		return $result;
+	}
+	function temp($gender,$sharing,$advancevars){
+		$this->db->select('*');
+		$this->db->from('pg');
+		if($gender[0]!="all"){
+			$this->db->where_in('seeking_a',$gender);
+		}
+		if($sharing[0]!="all"){
+			$this->db->where_in('sharing_type',$sharing);
+		}
+		$this->db->where($advancevars);
+		$result = $this->db->get();
+		return $result;
+	}
 	function insertdata($values){
 		$this->db->insert('listing',$values);
 	}

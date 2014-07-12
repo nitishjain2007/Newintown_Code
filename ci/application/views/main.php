@@ -79,7 +79,6 @@ window.onload=function(){
 }
 </script>
 </head>
-<body>
 <script>
 	$(function() {
 		var name = $( "#name" ),
@@ -160,7 +159,7 @@ window.onload=function(){
 
 </head>
 <body>
-<div id="header">
+<div id="header" style="height:65px;">
 <img src="../../static/images/newintown_in.png" height="55px" width="400px">
 <?php if($log == "loggedin"){?>
 <button type="button" id="user" class="btn btn-lg btn-info" data-container="body" data-toggle="popover" title="username" data-placement="bottom" style="margin-top:0.8%;" >
@@ -237,7 +236,10 @@ List your Property
 <div class="selected" id="pg" onclick="select(this.id)">PG</div>
 <div class="notselected" id="flat" onclick="select(this.id)">Flat</div>
 </div>
-<input id="searchTextField" class="form-control" type="text" style="background:rgba(0,0,0,0);color: white;" onKeydown="Javascript:    if(event.keyCode==13)giveresultdelay();"><br>
+<div style="width:50%;">
+<input id="searchTextField" class="form-control" type="text" style="background:rgba(0,0,0,0);" onKeydown="Javascript:    if(event.keyCode==13)giveresultdelay();">
+</div>
+<br>
 <input type="hidden" id="city2" name="city2" />
 <input type="hidden" id="cityLat" name="cityLat" />
 <input type="hidden" id="cityLng" name="cityLng" />  
@@ -288,7 +290,7 @@ List your Property
 <?php if($logout == "yes"){?>
 <div id="logoutchecker" style="display:none;">yes</div>
 <?php }else{ ?>
-<div id="logoutchecker" style="dispaly:none;">no</div>
+<div id="logoutchecker" style="display:none;">no</div>
 <?php } ?>
 <div id="footer">
 <! this represents example for retrieving data from controller ie year!>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<link href="http://www.pureux.com/fiddle/bootstrap/css/bootstrap.css" type="text/css" />
+<link href="http://www.pureux.com/fiddle/bootstrap/css/bootstrap-responsive.css" type="text/css" />
+<script>
+$("#toggler").click(function() {
+      $( ".container2" ).toggle( "slow", function() {
+        // Animation complete.
+      });
+    });
+function test1(){
+	$(".container2").toggle("fast", function(){
+		//Animation complete
+	});
+}
+</script>
+<link rel="stylesheet" type="text/css" href="../../static/css/slider.css">
+</head>
+<body>
+<div id="toggler"><img src="../../static/images/image1.jpeg" height="100px" width="100px"></div>
+<div class="container2" id="testd">
+<div style="float:right;width:44.19%;height:71.05%;background:black;border: 2px solid white;">
+<font style="float: left;color: white;margin-left:2px;">text goes here</font>
+</div>
+<div id="wrapper">
+<div class="slide_wrapper">
+<ul id="image_slider">
+<li style="width: 700px;"><img src="../../static/images/image1.jpeg"></li>
+<li style="width: 700px;"><img src="../../static/images/image2.jpeg"></li>
+<li style="width: 700px;"><img src="../../static/images/image3.jpeg"></li>
+<li style="width: 700px;"><img src="../../static/images/image4.jpeg"></li>
+<li style="width: 700px;"><img src="../../static/images/image5.jpeg"></li>
+<li style="width: 700px;"><img src="../../static/images/image6.jpeg"></li>
+<li style="width: 700px;"><img src="../../static/images/image7.jpeg"></li>
+<li style="width: 700px;"><img src="../../static/images/image8.jpeg"></li>
+<li style="width: 700px;"><img src="../../static/images/image9.jpeg"></li>
+<li></li>
+</ul>
+<span class="nvgt" id="prev"></span>
+<span class="nvgt" id="next"></span>
+</div>
+</div>
+<div class="slide_wrapper1">
+<ul id="pager">
+<table>
+<tr>
+<td>
+<li style="width:140px;"><img src="../../static/images/image1.jpeg" onclick="slideTo(0)"></li>
+</td>
+<td>
+<li style="width:140px;"><img src="../../static/images/image2.jpeg" onclick="slideTo(1)"></li>
+</td>
+<td>
+<li style="width:140px;"><img src="../../static/images/image3.jpeg" onclick="slideTo(2)"></li>
+</td>
+<td>
+<li style="width:140px;"><img src="../../static/images/image4.jpeg" onclick="slideTo(3)" ></li>
+</td>
+<td>
+<li style="width:140px;"><img src="../../static/images/image5.jpeg" onclick="slideTo(4)" ></li>
+</td>
+<td>
+<li style="width:140px;"><img src="../../static/images/image6.jpeg" onclick="slideTo(5)" ></li>
+</td>
+<td>
+<li style="width:140px;"><img src="../../static/images/image7.jpeg" onclick="slideTo(6)" ></li>
+</td>
+<td>
+<li style="width:140px;"><img src="../../static/images/image8.jpeg" onclick="slideTo(7)" ></li>
+</td>
+<td>
+<li style="width:140px;"><img src="../../static/images/image9.jpeg" onclick="slideTo(8)" ></li>
+</td>
+</tr>
+</table>
+</ul>
+<span class="nvgt1" id="prev1"></span>
+<span class="nvgt1" id="next1"></span>
+</div>
+</div>
+<div id="toggler"><img src="../../static/images/image2.jpeg" height="100px" width="100px"></div>
+</body>
+</html>
