@@ -29,6 +29,12 @@ class Controller1 extends CI_Controller{
 		if(isset($_GET["advance"])){
 			$advance = $_GET["advance"];
 		}
+		if($gender == ""){
+			$gender = "all";
+		}
+		if($sharing == ""){
+			$sharing = "all";
+		}
 		$gender = explode(',',$gender);
 		$sharing = explode(',',$sharing);
 		$advancevars = array();

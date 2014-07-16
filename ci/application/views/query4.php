@@ -254,9 +254,6 @@ $(document).ready(function(){
   }
 </script>
 <script>
-function test4(){
-    setTimeout(test,35);
-}
 function test(){
   var d = document.getElementById("testf");
   if(!d){
