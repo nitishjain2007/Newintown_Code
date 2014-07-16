@@ -3,22 +3,65 @@
 <head>
 <link rel="stylesheet" type="text/css" href="../../static/css/slider.css">
 <script>
-function test1(){
-	$(".container2").toggle("fast", function(){
-		//Animation complete
-	});
+var currentview = "";
+function closecurrent(ids){
+	var state = 0;
+	if(window["currentview"]!=""){
+		var h = "#" + window["currentview"] + "_toggler";
+		if(window["currentview"]!=ids){
+			$(h).toggle("slow", function(){
+				//Animation complete
+			});
+		}
+	}
+	if(window["currentview"] == ids){
+		window["currentview"] = "";
+		state=1;
+	}
+	if(state==0){
+		window["currentview"] = ids;
+	}
 }
-</script> 
+function test1(){
+	//$(".container2").toggle("fast", function(){
+		//Animation complete
+	//});
+}
+</script>
+<script>
+function hide(ids){
+	//alert(ids);
+	h = "#" + ids + "hider";
+	$(h).hide();
+	g = h + "map";
+	$(g).show();
+	initialize2(ids);
+}
+function show(ids){
+	//alert(ids);
+	h = "#" + ids + "hider";
+	g = h + "map";
+	$(g).hide();
+	$(h).show();
+}
+</script>
 </head>
 <body>
 <?php for($i=0;$i<count($locations);$i++){?>
-	<div id="<?php echo $locations[$i]->pid; ?>" onclick="initdelay(this.id)"><img src ="<?php echo $locations[$i]->image_1 ?>" height="100px" width="100px">
+	<div id="<?php echo $locations[$i]->pid; ?>" style="float:left;" onclick="initdelay(this.id)"><img src ="<?php echo $locations[$i]->image_1 ?>" height="100px" width="100px">
 	</div>
-	<div class="container2" id="<?php echo $locations[$i]->pid . "_toggler";?>">
+	<div class="container2" style="float:left;clear:left;display:none;" id="<?php echo $locations[$i]->pid . "_toggler";?>">
+	<div id="<?php echo $locations[$i]->pid . "hider"; ?>">
 	<div style="float:right;width:44.19%;height:70%;background:black;">
 	<font size="6" color="#11A7F6">
 	<?php echo $locations[$i]->seeking_a; ?> PG
 	</font>
+	<button type="button" id="<?php echo $locations[$i]->pid . "hide";?>" class="btn btn-lg btn-danger" data-container="body" style="float:right;" onclick="hide('<?php echo $locations[$i]->pid;?>')") >
+	Map View
+	</button>
+	<button type="button" id="<?php echo $locations[$i]->pid . "popup";?>" class="btn btn-lg btn-danger" data-container="body" style="float:right;" data-toggle="popover" title="Login" data-placement="bottom" >
+	Shortlist
+	</button>
 	<br>
 	<font size="3" color="white">Nearest Landmark - <?php echo $locations[$i]->nearest_landmark; ?></font>
 	<br>
@@ -164,6 +207,193 @@ function test1(){
 	<span class="nvgt1" style="background: #000 url('https://dl.dropboxusercontent.com/u/65639888/image/next.png') no-repeat center; right:0px;" onclick="onClickNext1()"></span>
 	</div>
 	</div>
+	<div class="container" id="<?php echo $locations[$i]->pid . "form" ;?>" title="Shortlist A Property">
+    <div class="row">
+        <div id="<?php echo $locations[$i]->pid . "formdiv" ;?>" style="margin-left: 10%;margin-right: 10%;">
+        <h4>Please Fill In the Form to continue</h4>
+        <br>
+            <form id="<?php echo $locations[$i]->pid . "formmain" ;?>" method="post" >
+                <div class="form-group">
+                    <input type="text" class="form-control" name="emailid" placeholder="EmailId">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="phoneno" placeholder="Phone Number">
+                </div>
+                <div class="form-group">
+                	<input type="text" class="form-control" name="pid" style="display:none;"value="<?php echo $locations[$i]->pid;?>">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Sign up</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+    <div id="<?php echo $locations[$i]->pid . "hidermap";?>" style="display:none;">
+    <input type="text" value="<?php $latitude = explode(',',$locations[$i]->gps)[0];echo $latitude;?>" id="<?php echo $locations[$i]->pid . "latitude"; ?>" style="display:none;"/>
+    <input type="text" value="<?php $longitude = explode(',',$locations[$i]->gps)[1];echo $longitude;?>" id="<?php echo $locations[$i]->pid . "longitude"; ?>" style="display:none;"/>
+    <div style="width:50%;height:550px;float:left;border:5px solid white;" id="<?php echo $locations[$i]->pid . "map";?>">
+    </div>
+    <button type="button" id="<?php echo $locations[$i]->pid . "hide";?>" class="btn btn-lg btn-danger" data-container="body" style="float:right;" onclick="show('<?php echo $locations[$i]->pid;?>')") >
+	Grid View
+	</button>
+	<button type="button" id="<?php echo $locations[$i]->pid . "popupd";?>" class="btn btn-lg btn-danger" data-container="body" style="float:right;" data-toggle="popover" title="Login" data-placement="bottom" >
+	Shortlist
+	</button>
+	<br>
+	<br>
+    <div style="width:48%;float:left;margin-left:1%;">
+    <div style="height:50%;">
+    <div style="width:49%;float:left;">
+    <font color="white">
+    <font size="6">
+    Nearest Markets
+    </font>
+    <table class="<?php echo $locations[$i]->pid . "table";?>" id="<?php echo "shoppingview" . $locations[$i]->pid;?>">
+    <tr>
+    <td style="font-weight:bold;">
+    Place
+    </td>
+    <td style="font-weight:bold;">
+    Distance
+    </td>
+    </tr>
+    </table>
+    </font>
+    </div>
+	<div style="width:50%;float:left;margin-left:1%;">
+    <font color="white">
+    <font size="6">
+    Nearest ATM's
+    </font>
+    <table class="<?php echo $locations[$i]->pid . "table";?>" id="<?php echo "atmview" . $locations[$i]->pid;?>">
+    <tr>
+    <td style="font-weight:bold;">
+    Place
+    </td>
+    <td style="font-weight:bold;">
+    Distance
+    </td>
+    </tr>
+    </table>
+    </font>
+    </div>
+    </div>
+    <div style="height:50%;">
+    <div style="width:49%;float:left;">
+    <font color="white">
+    <font size="6">
+    Nearest Metro's
+    </font>
+    <table class="<?php echo $locations[$i]->pid . "table";?>" id="<?php echo "metroview" . $locations[$i]->pid;?>">
+    <tr>
+    <td style="font-weight:bold;">
+    Place
+    </td>
+    <td style="font-weight:bold;">
+    Distance
+    </td>
+    </tr>
+    </table>
+    </font>
+    </div>
+	<div style="width:50%;float:left;margin-left:1%;">
+    <font color="white">
+    <font size="6">
+    Nearest Restaurants
+    </font>
+    <table class="<?php echo $locations[$i]->pid . "table";?>" id="<?php echo "restaurantview" . $locations[$i]->pid;?>">
+    <tr>
+    <td style="font-weight:bold;">
+    Place
+    </td>
+    <td style="font-weight:bold;">
+    Distance
+    </td>
+    </tr>
+    </table>
+    </font>
+    </div>
+    </div>
+    </div>
+    </div>
+	</div>
+	<script>
+    $(function() {
+        var name = $( "#name" ),
+            email = $( "#email" ),
+            password = $( "#password" ),
+            allFields = $( [] ).add( name ).add( email ).add( password ),
+            tips = $( ".validateTips" );
+
+        function updateTips( t ) {
+            tips
+                .text( t )
+                .addClass( "ui-state-highlight" );
+            setTimeout(function() {
+                tips.removeClass( "ui-state-highlight", 1500 );
+            }, 500 );
+        }
+        $( "<?php echo "#" . $locations[$i]->pid . "form";?>").dialog({
+            autoOpen: false,
+            height: 350,
+            width: 400,
+            modal: true,
+            buttons: {
+                Cancel: function() {
+                    $( this ).dialog( "close" );
+                }
+            },
+            close: function() {
+                allFields.val( "" ).removeClass( "ui-state-error" );
+            }
+        });
+
+        $( "<?php echo "#" . $locations[$i]->pid . "popup" ;?>")
+            .button()
+            .click(function() {
+                $( "<?php echo "#" . $locations[$i]->pid . "form" ;?>" ).dialog( "open" );
+            });
+    });
+	</script>
+	<script>
+    $(function() {
+        var name = $( "#name" ),
+            email = $( "#email" ),
+            password = $( "#password" ),
+            allFields = $( [] ).add( name ).add( email ).add( password ),
+            tips = $( ".validateTips" );
+
+        function updateTips( t ) {
+            tips
+                .text( t )
+                .addClass( "ui-state-highlight" );
+            setTimeout(function() {
+                tips.removeClass( "ui-state-highlight", 1500 );
+            }, 500 );
+        }
+        $( "<?php echo "#" . $locations[$i]->pid . "form";?>").dialog({
+            autoOpen: false,
+            height: 350,
+            width: 400,
+            modal: true,
+            buttons: {
+                Cancel: function() {
+                    $( this ).dialog( "close" );
+                }
+            },
+            close: function() {
+                allFields.val( "" ).removeClass( "ui-state-error" );
+            }
+        });
+
+        $( "<?php echo "#" . $locations[$i]->pid . "popupd" ;?>")
+            .button()
+            .click(function() {
+                $( "<?php echo "#" . $locations[$i]->pid . "form" ;?>" ).dialog( "open" );
+            });
+    });
+	</script>
 	<script>
 	$("<?php echo "#" . $locations[$i]->pid; ?>").click(function() {
     	$("<?php echo "#" . $locations[$i]->pid . "_toggler"; ?>").toggle("slow", function(){

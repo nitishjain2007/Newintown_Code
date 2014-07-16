@@ -24,6 +24,10 @@
 <script src="../../bootstrap/js/alert.js"></script>
 <script src="../../bootstrap/js/dropdown.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1H88PyXHfW2qihya9R0VwoOF3cKmlSmY&sensor=FALSE&libraries=places">
+    </script>
+<script src="../../static/js/viewer.js"></script>
 <link rel="stylesheet" href="../../static/css/mainpage.css">
 <style>
 .dropdown-menu{
@@ -185,7 +189,6 @@ function genderchange(ids){
         window["gendertype"] = window["gendertype"].substr(1);
     }
     changecontent();
-    document.getElementById("button3").click();
 }
 function sharingchange(ids){
     var clicked = document.getElementById(ids);
@@ -206,7 +209,6 @@ function sharingchange(ids){
         window["sharingtype"] = window["sharingtype"].substr(1);
     }
     changecontent();
-    document.getElementById("button3").click();
 }
 function advancechange(){
     var advancevars = document.getElementsByName("advance[]");
@@ -220,7 +222,6 @@ function advancechange(){
         window["advance"] = window["advance"].substr(1);
     }
     changecontent();
-    document.getElementById("button3").click();
 }
 function changecontent(){
     var lng = document.getElementById("lng").innerHTML;
@@ -389,7 +390,6 @@ List your Property
 <div id="div1">
 </div>
 <button id="button2" onclick="test()" style="display: none;">Get External Content</button>
-<button id="button3" onclick="test4()" style="display: none;">Get Other Content</button>
 </div>
 </div>
 <div class="container" id="loginform" title="Login">

@@ -50,6 +50,9 @@ class Controller1 extends CI_Controller{
 		$data = array("locations" => $list);
 		$this->load->view("4",$data);
 	}
+	function five(){
+		$this->load->view("5");
+	}
 	function three(){
 		$this->load->model("users");
 		$f = $this->users->temp();

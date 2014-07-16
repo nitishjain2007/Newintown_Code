@@ -6,6 +6,7 @@ var prev,next;
 var currentPosition;
 var currentImage;
 function initdelay(ids){
+	closecurrent(ids);
 	setTimeout(function(){
 		init(ids);
 		init1(ids);
