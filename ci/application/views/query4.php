@@ -23,7 +23,6 @@
 <script src="../../bootstrap/js/popover.js"></script>
 <script src="../../bootstrap/js/alert.js"></script>
 <script src="../../bootstrap/js/dropdown.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1H88PyXHfW2qihya9R0VwoOF3cKmlSmY&sensor=FALSE&libraries=places">
     </script>
@@ -46,6 +45,9 @@
 function logout(){
     document.getElementById("logoutformmain").submit();
 }
+function n(){
+	$('#registerpop').show();
+}
 function h(){
     window.setTimeout(function(){
         document.forms['places'].submit();
@@ -57,8 +59,13 @@ function giveresultdelay(){
 function giveresult(){
     var lng = document.getElementById('cityLng').value;
     var lat = document.getElementById('cityLat').value;
-    var type = document.getElementsByClassName('selected')[0].id;
-    window.location="http://localhost/ci/index.php/controller1/query?lng="+lng+"&lat="+lat+"&type="+type;
+    if(lng == ""){
+	alert("Please enter a Valid Address");
+    }
+    else{
+    var type = "pg";
+    window.location="http://newintown.in/ci/index.php/controller1/query?lng="+lng+"&lat="+lat+"&type="+type;
+}
 }
 function initialize(){
 var defaultBounds = new google.maps.LatLngBounds(
@@ -165,6 +172,31 @@ window.onload=function(){
     });
 </script>
 <script>
+function viewshort(ids){
+	window.location = "http://newintown.in/ci/index.php/controller1/viewshortlist"; 
+}
+function checkshort(){
+	var user = document.getElementById("shortusernamevar").value;
+	var password = document.getElementById("shortpasswordvar").value;
+//	alert(user);
+//	alert(password);
+        $.ajax({
+                type: "POST",
+                url: "checkuser",
+                data: {username: user,password: password}
+        })
+                .done(function(value){
+                if(value == "success"){
+			document.getElementById("shortinusername").value = user;
+			document.getElementById("shortin").submit();
+		}
+                else{
+                        alert("wrong username/password");
+                }
+                });	
+}
+</script>
+<script>
 var gender = ["Boys","Girls"];
 var sharing = ["single","double","triple"];
 var gendertype = "all";
@@ -226,7 +258,12 @@ function advancechange(){
 function changecontent(){
     var lng = document.getElementById("lng").innerHTML;
     var lat = document.getElementById("lat").innerHTML;
-    $("#div1").load("four?lng=" + lng + "&lat=" + lat + "&gender=" + window["gendertype"] + "&sharing=" + window["sharingtype"] + "&advance=" + window["advance"]);
+    <?php if($log == "loggedin"){?>
+	var user = "<?php echo $user; ?>";
+    <?php }else{ ?>
+	var user = "";
+    <?php } ?> 
+    $("#div1").load("four?lng=" + lng + "&lat=" + lat + "&gender=" + window["gendertype"] + "&sharing=" + window["sharingtype"] + "&advance=" + window["advance"] + "&logstatus=" + "<?php echo $log; ?>" + "&user=" + user);
 }
 </script>
 
@@ -237,7 +274,13 @@ $(document).ready(function(){
   $(document).on("click","#button2", function(){
     var lng = document.getElementById("lng").innerHTML;
     var lat = document.getElementById("lat").innerHTML;
-    $("#div1").load("four?lng=" + lng + "&lat=" + lat + "&gender=all&sharing=all&adavance=" + window["advance"]);
+    <?php if($log == "loggedin"){?>
+        var user = "<?php echo $user; ?>";
+    <?php }else{ ?>
+        var user = "";
+    <?php } ?> 
+
+    $("#div1").load("four?lng=" + lng + "&lat=" + lat + "&gender=all&sharing=all&adavance=" + window["advance"] + "&logstatus=" + "<?php echo $log; ?>" + "&user=" + user);
   });
 });
 </script>
@@ -295,7 +338,7 @@ List your Property
 <?php }?>
 </font>
 <?php if($list == "yes"){ ?>
-<div style="position:absolute;margin-top:2%;" id="listbs">
+<div style="position:absolute;margin-top:6%;" id="listbs">
 <div style="float:right;margin-right:2%;" class="bs-example">
     <div class="alert alert-info">
         <a href="#" class="close" data-dismiss="alert">&times;</a>
@@ -305,7 +348,7 @@ List your Property
 </div>
 <?php }?>
 <?php if($log == "wrong"){ ?>
-<div style="position:absolute;margin-top:2%;" id="bs">
+<div style="position:absolute;margin-top:4%;" id="bs">
 <div style="float:right;margin-right:2%;" class="bs-example">
     <div class="alert alert-warning">
         <a href="#" class="close" data-dismiss="alert">&times;</a>
@@ -315,7 +358,7 @@ List your Property
 </div>
 <?php }?>
 <?php if($login == "yes"){ ?>
-<div style="position:absolute;margin-top:2%;" id="bs">
+<div style="position:absolute;margin-top:6%;" id="bs">
 <div style="float:right;margin-right:2%;" class="bs-example">
     <div class="alert alert-success">
         <a href="#" class="close" data-dismiss="alert">&times;</a>
@@ -325,7 +368,7 @@ List your Property
 </div>
 <?php }?>
 <?php if($logout == "yes"){ ?>
-<div style="position:absolute;margin-top:2%;" id="bs">
+<div style="position:absolute;margin-top:6%;" id="bs">
 <div style="float:right;margin-right:2%;" class="bs-example">
     <div class="alert alert-success">
         <a href="#" class="close" data-dismiss="alert">&times;</a>
@@ -334,24 +377,38 @@ List your Property
 </div>
 </div>
 <?php }?>
+<div style="position:absolute;margin-top:6%;" id="registerbs">
+<div style="float:right;margin-right:2%;" class="bs-example">
+    <div class="alert alert-warning" id="registerpop" style="display:none;">
+        <a href="#" class="close" data-dismiss="alert">&times;</a>
+        You are Registered. Now You can Login.
+    </div>
+</div>
+</div>
 </div>
 <div id="plk" style="background-color: #EFEFF2;height: 70px;width:100%;margin-top:0.84%;">
     <div style="left: 0;float:left;">
         <button type="button" class="btn btn-default" id="Boys" style="height:50px;;width:70px;margin-top:10px;border-radius:0px;" onclick="genderchange(this.id)">Boys</button>
         <button type="button" class="btn btn-default" id="Girls" style="height:50px;;width:70px;margin-top:10px;border-radius:0px;margin-left:-4px;" onclick="genderchange(this.id)">Girls</button>
     </div>
-    <div style="float:left;margin-left:9.5%;">
+    <div style="float:left;margin-left:4.5%;">
         <button type="button" class="btn btn-default" id="single" style="height:50px;margin-top:10px;border-radius:0px;" onclick="sharingchange(this.id)">Single Sharing</button>
         <button type="button" class="btn btn-default" id="double" style="height:50px;margin-top:10px;border-radius:0px;margin-left:-4px;" onclick="sharingchange(this.id)">Double Sharing</button>
         <button type="button" class="btn btn-default" id="triple" style="height:50px;margin-top:10px;border-radius:0px;margin-left:-4px" onclick="sharingchange(this.id)">3+ Sharing</button>
     </div>
-    <div style="float:left;margin-left:8%;">
+    <div style="float:left;margin-left:4.5%;">
         <input id="searchTextField" class="form-control" type="text" style="background:rgba(0,0,0,0);margin-top:18px;" placeholder="Search Here" onKeydown="Javascript:    if(event.keyCode==13)giveresultdelay();">
         <input type="hidden" id="city2" name="city2" />
         <input type="hidden" id="cityLat" name="cityLat" />
         <input type="hidden" id="cityLng" name="cityLng" /> 
     </div>
-    <div style="float:left;margin-left:8%" class="btn-toolbar">
+    <div style="float:left;margin-left:0.5%;">
+	        <button type="button" class="btn btn-primary" onclick="giveresultdelay()" style="height: 30px;margin-top:20px;float:left;">Go</button>
+    </div>
+    <div style="float:left;margin-left:4.5%;">
+        <button type="button" class="btn btn-primary" id="<?php if($log == "loggedin"){echo "shortink";}else{echo "shortout";}?>" onclick="viewshort(this.id)" style="height:50px;margin-top:10px;border-radius:0px;">View Shortlist</button>
+    </div>
+    <div style="float:left;margin-left:1%" class="btn-toolbar">
     <div class="btn-group">
         <button type="button" class="btn btn-primary" style="height:50px;margin-top:10px;border-radius:0px;">Advance Filters</button>
         <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle" style="height:50px;margin-top:10px;border-radius:0px;margin-left:-4px;"><span class="caret"></span></button>
@@ -386,61 +443,75 @@ List your Property
 <div id="content1">
 <div id="div1">
 </div>
-<button id="button2" onclick="test()" style="display: none;">Get External Content</button>
+<button id="button2" style="display: none;">Get External Content</button>
 </div>
+</div>
+<div style="display:none;">
+	<form id="shortin" method="post" action="viewshortlist">
+		<input type="text" name="username" id="shortinusername">
+	</form>
 </div>
 <div class="container" id="loginform" title="Login">
     <div class="row">
         <div id="loginformdiv" style="margin-left: 10%;margin-right: 10%;">
-            <form id="loginformmain" method="post" >
+	    <form id="loginformmain" method="post" >
+	    	<div class="form-group">
+			<input type="text" class="form-control" name="username" placeholder="Username" size="20"/>
+		</div>
+		<div class="form-group">
+			<input type="password" class="form-control" name="password" placeholder="Password">
+		</div>
+		<div class="form-group">
+			<button type="submit" class="btn btn-primary">Sign up</button>
+		</div>
+	     </form>
+	</div>
+    </div>
+</div>
+<div class="container" id="shortloginform" title="Login">
+    <div class="row">
+        <div id="shortloginformdiv" style="margin-left: 10%;margin-right: 10%;">
+            <form id="loginformshort">
                 <div class="form-group">
-                    <input type="text" class="form-control" name="username" placeholder="Username" size="20"/>
+                        <input type="text" class="form-control" name="username" id="shortusernamevar" placeholder="Username" size="20"/>
                 </div>
                 <div class="form-group">
-                    <input type="password" class="form-control" name="password" placeholder="Password" />
+                        <input type="password" class="form-control" name="password" id="shortpasswordvar" placeholder="Password">
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Sign up</button>
+                        <button type="button" onclick="checkshort()" class="btn btn-primary">Sign up</button>
                 </div>
-            </form>
+             </form>
         </div>
     </div>
 </div>
 <div class="container" id="listform" title="List your Property">
     <div class="row">
         <div id="listformdiv" style="margin-left: 10%;margin-right: 10%;">
-            <form id="listformmain" method="post" >
-                <div class="form-group">
-                    <input type="text" class="form-control" name="name" placeholder="Name">
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" name="phoneno" placeholder="Phone Number">
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" name="email" placeholder="Email">
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Sign up</button>
-                </div>
-            </form>
-        </div>
+	    <form id="listformmain" method="post" >
+		<div class="form-group">
+		    <input type="text" class="form-control" name="name" placeholder="Name">
+		</div>
+		<div class="form-group">
+		    <input type="text" class="form-control" name="phoneno" placeholder="Phone Number">
+		</div>
+		<div class="form-group">
+		    <input type="text" class="form-control" name="email" placeholder="Email">
+		</div>
+		<div class="form-group">
+		    <button type="submit" class="btn btn-primary">Sign up</button>
+		</div>
+	    </form>
+	</div>
     </div>
+</div>
+<div id="usercontentsform" style="display:none;">
+	<input type="text" <?php if($log == "loggedin"){ ?> value="<?php echo $user; ?>" <?php } ?> id="username">
 </div>
 <div id="logoutform" style="display: none;">
     <form id="logoutformmain" method="post">
-    <input type="text" name="logout" value="yes">
+        <input type="text" name="logout" value="yes">
     </form>
-</div>
-<div id="popover-html" style="display:none">
-    <input type="checkbox" id="ad" name="advance[]" value="ac" onchange="loadXMLDoc(this.id)"/>ac<br>
-    <input type="checkbox" id="ad" name="advance[]" value="fridge" onchange="loadXMLDoc(this.id)"/>fridge<br>
-    <input type="checkbox" id="ad" name="advance[]" value="microwave" onchange="loadXMLDoc(this.id)"/>microwave<br>
-    <input type="checkbox" id="ad" name="advance[]" value="washing_machine" onchange="loadXMLDoc(this.id)"/>washing machine<br>
-    <input type="checkbox" id="ad" name="advance[]" value="ro" onchange="loadXMLDoc(this.id)"/>ro<br>
-    <input type="checkbox" id="ad" name="advance[]" value="security" onchange="loadXMLDoc(this.id)"/>security<br>
-    <input type="checkbox" id="ad" name="advance[]" value="laundry" onchange="loadXMLDoc(this.id)"/>laundry<br>
-    <input type="checkbox" id="ad" name="advance[]" value="gas_stove" onchange="loadXMLDoc(this.id)"/>gas stove<br>
-    <input type="checkbox" id="ad" name="advance[]" value="parking" onchange="loadXMLDoc(this.id)"/>parking<br>
 </div>
 <?php if($logout == "yes"){?>
 <div id="logoutchecker" style="display:none;">yes</div>
@@ -480,7 +551,7 @@ $(document).ready(function() {
                     }
                 }
             },
-             password: {
+            password: {
                 validators: {
                     notEmpty: {
                         message: 'The password is required and can\'t be empty'
@@ -546,7 +617,43 @@ $(document).ready(function() {
     });
 });
 </script>
-
-
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#loginformshort').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            username: {
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {
+                        message: 'The username is required and can\'t be empty'
+                    },        
+                    stringLength: {
+                        min: 6,
+                        max: 30,
+                        message: 'The username must be more than 6 and less than 30 characters long'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9_\.]+$/,
+                        message: 'The username can only consist of alphabetical, number, dot and underscore'
+                    }
+                }
+            },
+            password: {
+                validators: {
+                    notEmpty: {
+                        message: 'The password is required and can\'t be empty'
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
 </body>
 </html>

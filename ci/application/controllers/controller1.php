@@ -26,6 +26,7 @@ class Controller1 extends CI_Controller{
 		$gender = $_GET["gender"];
 		$sharing = $_GET["sharing"];
 		$advance = "";
+		$user = $_GET["user"];
 		if(isset($_GET["advance"])){
 			$advance = $_GET["advance"];
 		}
@@ -53,11 +54,168 @@ class Controller1 extends CI_Controller{
 				$list[] = $i;
 			}
 		}
-		$data = array("locations" => $list);
+		$log = $_GET["logstatus"];
+		if($this->input->cookie('session')){
+		$sessionname = $_COOKIE['session'];
+		$g = $this->users->getsessioninfo($sessionname);
+		foreach($g->result() as $i){
+			$shorted = $i->shortpg;
+		}
+		$shorted = explode(',',$shorted);
+		}
+		for($j=0;$j<count($list);$j++){
+			$temp = explode(',',$list[$j]->gps);
+			$list[$j]->lati = $temp[0];
+			$list[$j]->longi = $temp[1];
+			if($this->input->cookie('session')){
+			if(in_array($list[$j]->pid,$shorted)){
+				$list[$j]->short = "yes";
+			}
+			else{
+				$list[$j]->short = "no";
+			}
+			}
+			else{
+				$list[$j]->short = "no";
+			}
+		}
+		$data = array("locations" => $list,"log" => $_GET["logstatus"],"user" => $_GET["user"]);
 		$this->load->view("4",$data);
 	}
+	function viewshortlist(){
+		if(!$this->input->cookie('session')){
+			$this->load->view('viewshortnone');
+		}
+		else{
+			$sessionname = $_COOKIE['session'];
+			$this->load->model("users");
+			$f = $this->users->getsessioninfo($sessionname);
+			$short = "";
+			foreach($f->result() as $i){
+				$short = $i->shortpg;
+			}
+			if($short == ""){
+				$this->load->view('viewshortnone');
+			}
+			else{
+				$shorted = explode(',',$short);
+				$list = array();
+				$locations = $this->users->getshort($shorted);
+				foreach($locations->result() as $i){
+					$list[] = $i;
+				}
+		                for($j=0;$j<count($list);$j++){
+                		        $temp = explode(',',$list[$j]->gps);
+                        		$list[$j]->lati = $temp[0];
+                        		$list[$j]->longi = $temp[1];
+				}
+				$data = array("locations" => $list);
+				$this->load->view("shortlist",$data);	
+			}
+		}
+	}
+	function logout(){
+                delete_cookie("log");
+	}
+	function validate(){
+		$username = $_POST["username"];
+		$this->load->model("users");
+		$f = $this->users->check($username);
+		$j = 0;
+		foreach($f->result() as $i){
+			$j = $j + 1;
+		}
+		if($j == 0){
+			echo "success";
+		}
+		else{
+			echo "failure";
+		}
+	}
+	function removeshort1(){
+		$pid = $_POST["pid"];
+		$this->load->model("users");
+		$sessionname = $_COOKIE["session"];
+		$f = $this->users->getsessioninfo($sessionname);
+		$shorted = "";
+		foreach($f->result() as $i){
+			$shorted = $i->shortpg;
+		}
+		$shorted = explode(',',$shorted);
+		$short = "";
+		for($i=0;$i<count($shorted);$i++){
+			if($shorted[$i] != $pid){
+				$short = $short . "," . $shorted[$i];
+			}
+		}
+		if($short != ""){
+			$short = substr($short,1);
+		}
+		$this->users->addshortpid($sessionname,$short);
+	}
+	function addshort(){
+		$pid = $_POST["pid"];
+		$this->load->model('users');
+		if(!$this->input->cookie('session')){
+			$sessionname = $this->users->getcurrentsession();
+			echo $sessionname;
+                        $cookie = array(
+                        'name'   => 'session',
+                        'value'  => $sessionname,
+                        'expire' => '1000000',
+                        'path'   => '/',
+                        'prefix' => '',
+	                );
+        		$this->input->set_cookie($cookie);
+		        $_COOKIE['session'] = $sessionname;
+			$this->users->addsession($sessionname);
+		}
+		$sessionname = $_COOKIE['session'];
+		$short = $this->users->getsessioninfo($sessionname);
+		$shorted = "";
+		foreach($short->result() as $i){
+			$shorted = $i->shortpg;
+//			echo  $i->shortpg;
+		}
+		if($shorted == NULL || $shorted == ""){
+			$shorted = $pid;
+		}
+		else{
+			$shorted = $shorted . ',' . $pid;
+		}
+	//	echo $shorted;
+	//	echo $sessionname;
+		$this->users->addshortpid($sessionname,$shorted);
+		echo "success";
+	}	
+	function checkuser(){
+		$username = $_POST["username"];
+		$password = $_POST["password"];
+		$data = array("username" => $username, "password" => $password);
+		$this->load->model("users");
+		$f = $this->users->checkuser($data);
+		$j=0;
+		foreach($f->result() as $i){
+			$j = $j + 1;
+		}
+		if($j == 1){
+			echo "success";
+		}
+		else{
+			echo "failure";
+		}
+	}
+	function createuser(){
+		$username = $_POST["username"];
+		$password = $_POST["password"];
+		$phoneno = $_POST["phoneno"];
+		$data = array("username" => $username, "password" => $password, "phoneno" => $phoneno);
+		$this->load->model("users");
+		$this->users->createuser($data);
+	}
 	function five(){
-		$this->load->view("5");
+		$this->load->model("users");
+		$this->users->test();
 	}
 	function three(){
 		$this->load->model("users");

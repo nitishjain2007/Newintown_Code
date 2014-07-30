@@ -40,7 +40,7 @@ function giveresult(){
 	var lng = document.getElementById('cityLng').value;
 	var lat = document.getElementById('cityLat').value;
 	var type = document.getElementsByClassName('selected')[0].id;
-	window.location="http://localhost/ci/index.php/controller1/query?lng="+lng+"&lat="+lat+"&type="+type;
+	window.location="http://newintown.in/ci/index.php/controller1/query?lng="+lng+"&lat="+lat+"&type="+type;
 }
 function logout(){
 	document.getElementById("logoutformmain").submit();

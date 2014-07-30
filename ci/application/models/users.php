@@ -79,8 +79,74 @@ class Users extends CI_Model{
 		$result = $this->db->get();
 		return $result;
 	}
+	function check($name){
+		$this->db->select('*');
+		$this->db->from('users');
+		$this->db->where_in('username',$name);
+		$result = $this->db->get();
+		return $result;
+	}
+	function retrievedata($name){
+		$this->db->select('*');
+		$this->db->from('users');
+		$this->db->where_in('username',$name);
+		$result = $this->db->get();
+		return $result;
+	}
+	function getsessioninfo($sessionname){
+		$this->db->select('*');
+		$this->db->from('sessions');
+		$this->db->where_in('sessionid',$sessionname);
+		$result = $this->db->get();
+		return $result;
+	}
 	function insertdata($values){
 		$this->db->insert('listing',$values);
+	}
+	function createuser($values){
+		$this->db->insert('users',$values);
+	}
+	function addsession($sessionname){
+		$data = array('sessionid' => $sessionname);
+		$this->db->insert('sessions',$data);
+	}
+	function getshort($values){
+		$this->db->select('*');
+		$this->db->from('pg');
+		$this->db->where_in('pid',$values);
+		$result = $this->db->get();
+		return $result;
+	}
+	function checkuser($values){
+		$this->db->select('*');
+		$this->db->from('users');
+		$this->db->where($values);
+		$result = $this->db->get();
+		return $result;
+	}
+	function addshort($username,$short){
+		$data = array('shortpg' => $short);
+		$this->db->where('username',$username);
+		$this->db->update('users',$data);
+	}
+	function getcurrentsession(){
+		$this->db->select('*');
+		$this->db->from('currentsession');
+		$this->db->where_in('id',1);
+		$ids = $this->db->get();
+		foreach($ids->result() as $i){
+			$currentid = $i->session;
+		}
+		$currentid = $currentid + 1;
+		$data = array('session' => $currentid);
+		$this->db->where('id',1);
+		$this->db->update('currentsession',$data);
+		return $currentid;
+	}
+	function addshortpid($sessionname,$pid){
+		$data = array('shortpg' => $pid);
+		$this->db->where('sessionid',$sessionname);
+		$this->db->update('sessions',$data);
 	}
 }
 ?>
