@@ -59,7 +59,7 @@ function removeshort1(ids){
 	var classn = ids + "shorter";
 	var elements = document.getElementsByClassName(classn);
 	for(i=0;i<elements.length;i++){
-		elements[i].innerHTML = "Shortlist";
+		elements[i].innerHTML = "Working...";
 	}
 	$.ajax({
 		type: "POST",
@@ -67,11 +67,18 @@ function removeshort1(ids){
 		data: {pid: ids}
 	})
 		.done(function(){
-			alert("Removed from Shortlist");
+			var elements = document.getElementsByClassName(classn);
+			for(i=0;i<elements.length;i++){
+			elements[i].innerHTML = "Shortlist";
+			}
 		});
 }
 function addshort1(ids){
 	var classn = ids + "shorter";
+	var elements = document.getElementsByClassName(classn);
+	for(i=0;i<elements.length;i++){
+		elements[i].innerHTML = "Working...";
+	}
 	$.ajax({
 		type: "POST",
 		url: "addshort",
@@ -83,10 +90,13 @@ function addshort1(ids){
 				for(i=0;i<elements.length;i++){
 					elements[i].innerHTML = "Remove Shortlist";
 				}
-				alert("Shortlisted");
 			}
 			else{
 				alert("You Can Shortlist max 6 Properties");
+				var elements = document.getElementsByClassName(classn);
+				for(i=0;i<elements.length;i++){
+					elements[i].innerHTML = "Shortlist";
+				}
 			}
 		});
 }				
@@ -373,7 +383,7 @@ function show(ids){
 	<br>
 	<br>
 	<div style="width:48%;float:left;margin-left:1%;">
-	<div style="height:50%;">
+	<div style="height:50%;float:left;">
 	<div style="width:49%;float:left;">
 	<font color="white">
 	<font size="6">
@@ -409,7 +419,7 @@ function show(ids){
 	</font>
 	</div>
 	</div>
-	<div style="height:50%;">
+	<div style="height:50%;float:left;">
 	<div style="width:49%;float:left;">
 	<font color="white">
 	<font size="6">

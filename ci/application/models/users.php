@@ -79,6 +79,19 @@ class Users extends CI_Model{
 		$result = $this->db->get();
 		return $result;
 	}
+	function tempflat($furniture,$sharing,$advancevars){
+		$this->db->select('*');
+		$this->db->from('flat');
+		if($furniture[0]!="all"){
+			$this->db->where_in('furnishing_type',$furniture);
+		}
+		if($sharing[0]!="all"){
+			$this->db->where_in('bhk_type',$sharing);
+		}
+		$this->db->where($advancevars);
+		$result = $this->db->get();
+		return $result;
+	}
 	function check($name){
 		$this->db->select('*');
 		$this->db->from('users');
@@ -117,6 +130,13 @@ class Users extends CI_Model{
 		$result = $this->db->get();
 		return $result;
 	}
+	function getshortflat($values){
+		$this->db->select('*');
+		$this->db->from('flat');
+		$this->db->where_in('pid',$values);
+		$result = $this->db->get();
+		return $result;
+	}
 	function checkuser($values){
 		$this->db->select('*');
 		$this->db->from('users');
@@ -145,6 +165,11 @@ class Users extends CI_Model{
 	}
 	function addshortpid($sessionname,$pid){
 		$data = array('shortpg' => $pid);
+		$this->db->where('sessionid',$sessionname);
+		$this->db->update('sessions',$data);
+	}
+	function addshortpidflat($sessionname,$pid){
+		$data = array('shortflat' => $pid);
 		$this->db->where('sessionid',$sessionname);
 		$this->db->update('sessions',$data);
 	}

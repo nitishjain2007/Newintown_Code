@@ -91,26 +91,44 @@ class Controller1 extends CI_Controller{
 			$this->load->model("users");
 			$f = $this->users->getsessioninfo($sessionname);
 			$short = "";
+			$short1 = "";
 			foreach($f->result() as $i){
 				$short = $i->shortpg;
+				$short1 = $i->shortflat;
 			}
-			if($short == ""){
+			$short2 = $short . $short1;
+			if($short2 == ""){
 				$this->load->view('viewshortnone');
 			}
 			else{
-				$shorted = explode(',',$short);
 				$list = array();
-				$locations = $this->users->getshort($shorted);
-				foreach($locations->result() as $i){
-					$list[] = $i;
+				$list1 = array();
+				if($short!= ""){
+					$shorted = explode(',',$short);
+					$locations = $this->users->getshort($shorted);
+					foreach($locations->result() as $i){
+						$list[] = $i;
+					}
 				}
-		                for($j=0;$j<count($list);$j++){
-                		        $temp = explode(',',$list[$j]->gps);
-                        		$list[$j]->lati = $temp[0];
-                        		$list[$j]->longi = $temp[1];
+				if($short1!=""){
+					$shorted = explode(',',$short1);
+					$locations = $this->users->getshortflat($shorted);
+					foreach($locations->result() as $i){
+						$list1[] = $i;
+					}
 				}
-				$data = array("locations" => $list);
-				$this->load->view("shortlist",$data);	
+		    for($j=0;$j<count($list);$j++){
+		        $temp = explode(',',$list[$j]->gps);
+                $list[$j]->lati = $temp[0];
+                $list[$j]->longi = $temp[1];
+			}
+		    for($j=0;$j<count($list1);$j++){
+		        $temp = explode(',',$list1[$j]->gps);
+                $list1[$j]->lati = $temp[0];
+                $list1[$j]->longi = $temp[1];
+			}
+			$data = array("locations" => $list,"locations1" => $list1);
+			$this->load->view("shortlist",$data);	
 			}
 		}
 	}
@@ -153,6 +171,27 @@ class Controller1 extends CI_Controller{
 		}
 		$this->users->addshortpid($sessionname,$short);
 	}
+	function removeshort2(){
+		$pid = $_POST["pid"];
+		$this->load->model("users");
+		$sessionname = $_COOKIE["session"];
+		$f = $this->users->getsessioninfo($sessionname);
+		$shorted = "";
+		foreach($f->result() as $i){
+			$shorted = $i->shortflat;
+		}
+		$shorted = explode(',',$shorted);
+		$short = "";
+		for($i=0;$i<count($shorted);$i++){
+			if($shorted[$i] != $pid){
+				$short = $short . "," . $shorted[$i];
+			}
+		}
+		if($short != ""){
+			$short = substr($short,1);
+		}
+		$this->users->addshortpidflat($sessionname,$short);
+	}
 	function addshort(){
 		$pid = $_POST["pid"];
 		$this->load->model('users');
@@ -175,7 +214,6 @@ class Controller1 extends CI_Controller{
 		$shorted = "";
 		foreach($short->result() as $i){
 			$shorted = $i->shortpg;
-//			echo  $i->shortpg;
 		}
 		if($shorted == NULL || $shorted == ""){
 			$shorted = $pid;
@@ -183,10 +221,52 @@ class Controller1 extends CI_Controller{
 		else{
 			$shorted = $shorted . ',' . $pid;
 		}
-	//	echo $shorted;
-	//	echo $sessionname;
-		$this->users->addshortpid($sessionname,$shorted);
-		echo "success";
+		$shortedids = explode(',',$shorted);
+		if(count($shortedids) >=7){
+			echo "failure";
+		}
+		else{
+			$this->users->addshortpid($sessionname,$shorted);
+			echo "success";
+		}
+	}
+	function addshortflat(){
+		$pid = $_POST["pid"];
+		$this->load->model('users');
+		if(!$this->input->cookie('session')){
+			$sessionname = $this->users->getcurrentsession();
+			echo $sessionname;
+                        $cookie = array(
+                        'name'   => 'session',
+                        'value'  => $sessionname,
+                        'expire' => '1000000',
+                        'path'   => '/',
+                        'prefix' => '',
+	                );
+        		$this->input->set_cookie($cookie);
+		        $_COOKIE['session'] = $sessionname;
+			$this->users->addsession($sessionname);
+		}
+		$sessionname = $_COOKIE['session'];
+		$short = $this->users->getsessioninfo($sessionname);
+		$shorted = "";
+		foreach($short->result() as $i){
+			$shorted = $i->shortflat;
+		}
+		if($shorted == NULL || $shorted == ""){
+			$shorted = $pid;
+		}
+		else{
+			$shorted = $shorted . ',' . $pid;
+		}
+		$shortedids = explode(',',$shorted);
+		if(count($shortedids) >=7){
+			echo "failure";
+		}
+		else{
+			$this->users->addshortpidflat($sessionname,$shorted);
+			echo "success";
+		}
 	}	
 	function checkuser(){
 		$username = $_POST["username"];
@@ -214,8 +294,66 @@ class Controller1 extends CI_Controller{
 		$this->users->createuser($data);
 	}
 	function five(){
+		$lng = $_GET["lng"];
+		$lat = $_GET["lat"];
+		$furniture = $_GET["furnishing"];
+		$sharing = $_GET["sharing"];
+		$advance = "";
+		$user = $_GET["user"];
+		if(isset($_GET["advance"])){
+			$advance = $_GET["advance"];
+		}
+		if($furniture == ""){
+			$furniture = "all";
+		}
+		if($sharing == ""){
+			$sharing = "all";
+		}
+		$furniture = explode(',',$furniture);
+		$sharing = explode(',',$sharing);
+		$advancevars = array();
+		if($advance!=""){
+			$advance = explode(',',$advance);
+			foreach($advance as $i){
+				$advancevars[$i] = "y";
+			}
+		}
+		$list = array();
 		$this->load->model("users");
-		$this->users->test();
+		$f = $this->users->tempflat($furniture,$sharing,$advancevars);
+		foreach ($f->result() as $i){
+			$temp = explode(',',$i->gps);
+			if($this->_calculate($temp[1],$temp[0],$lng,$lat) <=5){
+				$list[] = $i;
+			}
+		}
+		$log = $_GET["logstatus"];
+		if($this->input->cookie('session')){
+		$sessionname = $_COOKIE['session'];
+		$g = $this->users->getsessioninfo($sessionname);
+		foreach($g->result() as $i){
+			$shorted = $i->shortflat;
+		}
+		$shorted = explode(',',$shorted);
+		}
+		for($j=0;$j<count($list);$j++){
+			$temp = explode(',',$list[$j]->gps);
+			$list[$j]->lati = $temp[0];
+			$list[$j]->longi = $temp[1];
+			if($this->input->cookie('session')){
+			if(in_array($list[$j]->pid,$shorted)){
+				$list[$j]->short = "yes";
+			}
+			else{
+				$list[$j]->short = "no";
+			}
+			}
+			else{
+				$list[$j]->short = "no";
+			}
+		}
+		$data = array("locations" => $list,"log" => $_GET["logstatus"],"user" => $_GET["user"]);
+		$this->load->view("5",$data);
 	}
 	function three(){
 		$this->load->model("users");
@@ -287,6 +425,12 @@ class Controller1 extends CI_Controller{
 	public function query(){
 		$lng = $_GET["lng"];
 		$lat = $_GET["lat"];
+		if($_GET["type"] == "pg"){
+			$page = "query4";
+		}
+		else{
+			$page = "query5";
+		}
 		$list = "no";
 		$login = "no";
 		$logout = "no";
@@ -314,7 +458,7 @@ class Controller1 extends CI_Controller{
     	$this->input->set_cookie($cookie);
     	$_COOKIE['log'] = 'loggedout';
     	$data = array("log" => $this->input->cookie('log'),"list" => $list,"login" =>$login,"logout"=>$logout,"lng" => $lng,"lat" => $lat);
-    	$this->load->view("query4",$data);
+    	$this->load->view($page,$data);
 		}
 		else{
 			if($this->input->cookie('log')=="loggedout" || $this->input->cookie('log') == "wrong"){
@@ -345,7 +489,7 @@ class Controller1 extends CI_Controller{
 						$_COOKIE['newuser'] = $_POST["username"];
 						//echo $_POST["username"];
 						$data = array("log" => $this->input->cookie('log'), "user" => $this->input->cookie('newuser'), "list" => $list,"login" =>$login,"logout" => $logout,"lng" => $lng,"lat" => $lat);
-						$this->load->view("query4",$data);
+						$this->load->view($page,$data);
 					}
 					else{
 						$cookie = array(
@@ -358,17 +502,17 @@ class Controller1 extends CI_Controller{
 						$this->input->set_cookie($cookie);
 						$_COOKIE['log'] = "wrong";
 						$data = array("log" => $this->input->cookie('log'),"list"=>$list,"login" => $login,"logout" => $logout,"lng" => $lng,"lat" => $lat);
-						$this->load->view("query4",$data);
+						$this->load->view($page,$data);
 					}
 				}
 				else{
 					$data = array("log" => $this->input->cookie('log'),"list" => $list,"login"=>$login,"logout"=>$logout,"lng" => $lng,"lat" => $lat);
-					$this->load->view("query4",$data);
+					$this->load->view($page,$data);
 				}
 			}
 			else{
 				$data = array("log" => $this->input->cookie('log'), "user" => $this->input->cookie('newuser'),"list"=>$list,"login"=>$login,"logout"=>$logout,"lng" => $lng,"lat" => $lat);
-				$this->load->view("query4",$data);
+				$this->load->view($page,$data);
 			}
 		}
 

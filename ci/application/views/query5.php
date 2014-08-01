@@ -54,8 +54,8 @@ function h(){
     }, 10000);
 }
 function giveresultdelay(){
-    $('#div').hide();
-    $('#div2').show();
+	$('#div1').hide();
+	$('#div2').show();
     setTimeout("giveresult()",10000);
 }
 function giveresult(){
@@ -66,7 +66,7 @@ function giveresult(){
     }
     else{
     var type = "pg";
-    window.location="http://newintown/ci/index.php/controller1/query?lng="+lng+"&lat="+lat+"&type="+type;
+    window.location="http://newintown.in/ci/index.php/controller1/query?lng="+lng+"&lat="+lat+"&type="+type;
 }
 }
 function initialize(){
@@ -199,12 +199,13 @@ function checkshort(){
 }
 </script>
 <script>
-var gender = ["Boys","Girls"];
-var sharing = ["single","double","triple"];
-var gendertype = "all";
+var furnishing = ["Unfurnished","Semi furnished","Fully furnished"];
+var sharing = ["1","2","3,4"];
+var furnishingtype = "all";
 var sharingtype = "all";
 var advance = "";
-function genderchange(ids){
+function furnishingchange(ids){
+	alert("hi");
     var clicked = document.getElementById(ids);
     if(clicked.className == "btn btn-default"){
         clicked.className = "btn btn-primary";
@@ -212,16 +213,18 @@ function genderchange(ids){
     else if(clicked.className == "btn btn-primary"){
         clicked.className = "btn btn-default";
     }
-    window["gendertype"] = "";
-    for(i=0;i<gender.length;i++){
-        var temp = document.getElementById(gender[i]);
+    window["furnishingtype"] = "";
+    for(i=0;i<furnishing.length;i++){
+    	alert(furnishing[i]);
+        var temp = document.getElementById(furnishing[i]);
         if(temp.className == "btn btn-primary"){
-            window["gendertype"] = window["gendertype"] + "," + gender[i];
+            window["furnishingtype"] = window["furnishingtype"] + "," + furnishing[i];
         }
     }
-    if(window["gendertype"]!=""){
-        window["gendertype"] = window["gendertype"].substr(1);
+    if(window["furnishingtype"]!=""){
+        window["furnishingtype"] = window["furnishingtype"].substr(1);
     }
+    //alert(window["furnishingtype"]);
     changecontent();
 }
 function sharingchange(ids){
@@ -242,6 +245,7 @@ function sharingchange(ids){
     if(window["sharingtype"]!=""){
         window["sharingtype"] = window["sharingtype"].substr(1);
     }
+    //alert(window["sharingtype"]);
     changecontent();
 }
 function advancechange(){
@@ -258,8 +262,8 @@ function advancechange(){
     changecontent();
 }
 function changecontent(){
-    $('#div1').hide();
-    $('#div2').show();
+	$('#div1').hide();
+	$('#div2').show();
     var lng = document.getElementById("lng").innerHTML;
     var lat = document.getElementById("lat").innerHTML;
     <?php if($log == "loggedin"){?>
@@ -267,7 +271,7 @@ function changecontent(){
     <?php }else{ ?>
 	var user = "";
     <?php } ?> 
-    $("#div1").load("four?lng=" + lng + "&lat=" + lat + "&gender=" + window["gendertype"] + "&sharing=" + window["sharingtype"] + "&advance=" + window["advance"] + "&logstatus=" + "<?php echo $log; ?>" + "&user=" + user,function(){$('#div2').hide();$('#div1').show();});
+    $("#div1").load("five?lng=" + lng + "&lat=" + lat + "&furnishing=" + window["furnishingtype"] + "&sharing=" + window["sharingtype"] + "&advance=" + window["advance"] + "&logstatus=" + "<?php echo $log; ?>" + "&user=" + user,function(){$('#div1').show();$('#div2').hide();});
 }
 </script>
 
@@ -284,7 +288,7 @@ $(document).ready(function(){
         var user = "";
     <?php } ?> 
 
-    $("#div1").load("four?lng=" + lng + "&lat=" + lat + "&gender=all&sharing=all&adavance=" + window["advance"] + "&logstatus=" + "<?php echo $log; ?>" + "&user=" + user,function(){$('#div2').hide();$('#div1').show();});
+    $("#div1").load("five?lng=" + lng + "&lat=" + lat + "&furnishing=all&sharing=all&adavance=" + window["advance"] + "&logstatus=" + "<?php echo $log; ?>" + "&user=" + user,function(){$('#div1').show();$('#div2').hide();});
   });
 });
 </script>
@@ -392,15 +396,16 @@ List your Property
 </div>
 <div id="plk" style="background-color: #EFEFF2;height: 70px;width:100%;margin-top:0.84%;">
     <div style="left: 0;float:left;">
-        <button type="button" class="btn btn-default" id="Boys" style="height:50px;;width:70px;margin-top:10px;border-radius:0px;" onclick="genderchange(this.id)">Boys</button>
-        <button type="button" class="btn btn-default" id="Girls" style="height:50px;;width:70px;margin-top:10px;border-radius:0px;margin-left:-4px;" onclick="genderchange(this.id)">Girls</button>
+        <button type="button" class="btn btn-default" id="Unfurnished" style="height:50px;margin-top:10px;border-radius:0px;" onclick="furnishingchange(this.id)">Unfurnished</button>
+        <button type="button" class="btn btn-default" id="Semi furnished" style="height:50px;margin-top:10px;border-radius:0px;margin-left:-4px;" onclick="furnishingchange(this.id)">Semi Furnished</button>
+        <button type="button" class="btn btn-default" id="Fully furnished" style="height:50px;margin-top:10px;border-radius:0px;margin-left:-4px;" onclick="furnishingchange(this.id)">Fully Furnished</button>
     </div>
-    <div style="float:left;margin-left:4.5%;">
-        <button type="button" class="btn btn-default" id="single" style="height:50px;margin-top:10px;border-radius:0px;" onclick="sharingchange(this.id)">Single Sharing</button>
-        <button type="button" class="btn btn-default" id="double" style="height:50px;margin-top:10px;border-radius:0px;margin-left:-4px;" onclick="sharingchange(this.id)">Double Sharing</button>
-        <button type="button" class="btn btn-default" id="triple" style="height:50px;margin-top:10px;border-radius:0px;margin-left:-4px" onclick="sharingchange(this.id)">3+ Sharing</button>
+    <div style="float:left;margin-left:2.5%;">
+        <button type="button" class="btn btn-default" id="1" style="height:50px;margin-top:10px;border-radius:0px;" onclick="sharingchange(this.id)">1BHK</button>
+        <button type="button" class="btn btn-default" id="2" style="height:50px;margin-top:10px;border-radius:0px;margin-left:-4px;" onclick="sharingchange(this.id)">2BHK</button>
+        <button type="button" class="btn btn-default" id="3,4" style="height:50px;margin-top:10px;border-radius:0px;margin-left:-4px" onclick="sharingchange(this.id)">3+BHK</button>
     </div>
-    <div style="float:left;margin-left:4.5%;">
+    <div style="float:left;margin-left:2.5%;">
         <input id="searchTextField" class="form-control" type="text" style="background:rgba(0,0,0,0);margin-top:18px;" placeholder="Search Here" onKeydown="Javascript:    if(event.keyCode==13)giveresultdelay();">
         <input type="hidden" id="city2" name="city2" />
         <input type="hidden" id="cityLat" name="cityLat" />
@@ -409,7 +414,7 @@ List your Property
     <div style="float:left;margin-left:0.5%;">
 	        <button type="button" class="btn btn-primary" onclick="giveresultdelay()" style="height: 30px;margin-top:20px;float:left;">Go</button>
     </div>
-    <div style="float:left;margin-left:4.5%;">
+    <div style="float:left;margin-left:2.5%;">
         <button type="button" class="btn btn-primary" id="<?php if($log == "loggedin"){echo "shortink";}else{echo "shortout";}?>" onclick="viewshort(this.id)" style="height:50px;margin-top:10px;border-radius:0px;">View Shortlist</button>
     </div>
     <div style="float:left;margin-left:1%" class="btn-toolbar">
@@ -418,15 +423,13 @@ List your Property
         <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle" style="height:50px;margin-top:10px;border-radius:0px;margin-left:-4px;"><span class="caret"></span></button>
         <div class="dropdown-menu">
             <div id="hj" style="padding:10px;">
-            <input type="checkbox" id="ad" name="advance[]" value="ac" onchange="advancechange()"/>ac<br>
             <input type="checkbox" id="ad" name="advance[]" value="fridge" onchange="advancechange()"/>fridge<br>
+            <input type="checkbox" id="ad" name="advance[]" value="sofa" onchange="advancechange()"/>sofa<br>
             <input type="checkbox" id="ad" name="advance[]" value="microwave" onchange="advancechange()"/>microwave<br>
             <input type="checkbox" id="ad" name="advance[]" value="washing_machine" onchange="advancechange()"/>washing machine<br>
             <input type="checkbox" id="ad" name="advance[]" value="ro" onchange="advancechange()"/>ro<br>
-            <input type="checkbox" id="ad" name="advance[]" value="security" onchange="advancechange()"/>security<br>
-            <input type="checkbox" id="ad" name="advance[]" value="laundry" onchange="advancechange()"/>laundry<br>
+            <input type="checkbox" id="ad" name="advance[]" value="mattress" onchange="advancechange()"/>mattress<br>
             <input type="checkbox" id="ad" name="advance[]" value="gas_stove" onchange="advancechange()"/>gas stove<br>
-            <input type="checkbox" id="ad" name="advance[]" value="parking" onchange="advancechange()"/>parking<br>
             </div>
         </div>
         </div>
