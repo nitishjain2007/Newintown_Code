@@ -34,13 +34,49 @@ function select(types){
 	} 
 }
 function giveresultdelay(){
+    $('.content1').hide();
+    $('#div2').show();
 	setTimeout("giveresult()",10000);
 }
 function giveresult(){
 	var lng = document.getElementById('cityLng').value;
 	var lat = document.getElementById('cityLat').value;
 	var type = document.getElementsByClassName('selected')[0].id;
+    $(".content1").hide();
+    $("#div2").show();
 	window.location="http://newintown.in/ci/index.php/controller1/query?lng="+lng+"&lat="+lat+"&type="+type;
+}
+function createuser(){
+    $("#register").dialog('close');
+    var name = document.getElementById("name1").value;
+    var user = document.getElementById("username1").value;
+    var password = document.getElementById("password1").value;
+    var phoneno = document.getElementById("phoneno1").value;
+    $.ajax({
+        type: "POST",
+        url: "createuser",
+        data: {name: name, username: user, password: password, phoneno: phoneno}
+    });
+}
+function register(){
+    $( "#loginform" ).dialog( "close" );
+    alert("hi");
+    var user = document.getElementById("username1").value;
+    $.ajax({
+        type: "POST",
+        url: "validate",
+        data: {username: user}
+    })
+        .done(function(value){
+        if(value == "success"){
+            createuser();
+            alert("You are Registered");
+        }
+        else{
+            alert("Username exists");
+            $("#register").dialog('close');
+        }
+        });
 }
 function logout(){
 	document.getElementById("logoutformmain").submit();
@@ -118,6 +154,44 @@ window.onload=function(){
 	});
 </script>
 <script>
+    $(function() {
+        var name = $( "#name" ),
+        email = $( "#email" ),
+        password = $( "#password" ),
+        allFields = $( [] ).add( name ).add( email ).add( password ),
+        tips = $( ".validateTips" );
+
+        function updateTips( t ) {
+            tips
+                .text( t )
+                .addClass( "ui-state-highlight" );
+            setTimeout(function() {
+                tips.removeClass( "ui-state-highlight", 1500 );
+            }, 500 );
+        }
+        $( "#register").dialog({
+            autoOpen: false, 
+            height: 500, 
+            width: 400,
+            modal: true,
+            buttons: {
+                Cancel: function() {
+                        $( this ).dialog( "close" );
+                }
+            },
+            close: function() {
+                allFields.val( "" ).removeClass( "ui-state-error" );
+            }
+        });
+
+        $( ".registerform")
+                .button()
+                .click(function() {
+                        $( "#register" ).dialog( "open" );
+                });
+    });
+</script>
+<script>
 	$(function() {
 		var name = $( "#name" ),
 			email = $( "#email" ),
@@ -158,9 +232,9 @@ window.onload=function(){
 
 
 </head>
-<body>
-<div id="header" style="height:65px;">
-<img src="../../static/images/newintown_in.png" height="55px" width="400px">
+<body background='../../../background.jpg' style='font-family: arial;'>
+<div id="header" style="height:45px;">
+<a href="http://newintown.in/ci/index.php/controller1/main"><img src="../../static/images/newintown_in.png" height="45px" width="250px"></a>
 <?php if($log == "loggedin"){?>
 <button type="button" id="user" class="btn btn-lg btn-info" data-container="body" data-toggle="popover" title="username" data-placement="bottom" style="margin-top:0.8%;" >
   Welcome <?php echo " ";
@@ -178,7 +252,7 @@ List your Property
   Login
 </button>
 <?php }else{?>
-<button type="button" id="logoutpopup" class="btn btn-lg btn-danger" data-container="body" data-toggle="popover" title="Logout" data-placement="bottom" style = "border-radius: 0px;height:65px;width:100px;" onclick="logout()" >
+<button type="button" id="logoutpopup" class="btn btn-lg btn-danger" data-container="body" data-toggle="popover" title="Logout" data-placement="bottom" style = "border-radius: 0px;width:100px;" onclick="logout()" >
   Logout
 </button>
 <?php }?>
@@ -226,41 +300,43 @@ List your Property
 </div>
 </div>
 <div id="container1">
-<div id="content1">
-<font size="6" color="white"><p style="text-align:center;">Introducing <font color="red">Easy & Convinient </font>House Hunting</p></font>
-</div>
-<div id="holograph">
-<h1>This space is meant for carausel</h1>
-</div>
+<div style='text-align:center;vertical-align:middle;margin-top:45px;font-size:20px;color:white;font-family:arial'><span>Introducing <span style='font-size:23px;color:rgb(192,0,0);'>transparent & hassle-free</span> house-hunting</span></div>
+<div class='motto' style='z-index:-1;'><img src='../../static/images/motto2.png' class='motto_img'></div>
+<div id="div2" style="display:none;margin-top:5%;">
+<img style="display:block;margin-left:auto;margin-right:auto;height:150px;width:150px;" src="../../static/images/loader.gif">
+</div>	
+<div class="content1">
 <div class="main">
 <div class="selected" id="pg" onclick="select(this.id)">PG</div>
 <div class="notselected" id="flat" onclick="select(this.id)">Flat</div>
 </div>
-<div style="width:50%;">
-<input id="searchTextField" class="form-control" type="text" style="background:rgba(0,0,0,0);" onKeydown="Javascript:    if(event.keyCode==13)giveresultdelay();">
+<div style="margin-left: 25%;margin-top:10px;float:left;width: 80%;">
+<input id="searchTextField" class="form-control" type="text" style="float: left;width: 60%;" onKeydown="Javascript:    if(event.keyCode==13)giveresultdelay();">
+<button style='float:left;height:35px;width: 80px;background: #0066A2;color: white;border-bottom-right-radius: 4px;border-top-right-radius: 4px;border: 0px;' type="submit" onclick="giveresultdelay()">Search</button>
+</div>
 </div>
 <br>
 <input type="hidden" id="city2" name="city2" />
 <input type="hidden" id="cityLat" name="cityLat" />
 <input type="hidden" id="cityLng" name="cityLng" />  
-<button type="submit" onclick="giveresultdelay()">submit</button>
 </div>
 <div class="container" id="loginform" title="Login">
     <div class="row">
         <div id="loginformdiv" style="margin-left: 10%;margin-right: 10%;">
-            <form id="loginformmain" method="post" >
-                <div class="form-group">
-                    <input type="text" class="form-control" name="username" placeholder="Username" size="20"/>
-                </div>
-                <div class="form-group">
-                    <input type="password" class="form-control" name="password" placeholder="Password" />
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Sign up</button>
-                </div>
-            </form>
+        <form id="loginformmain" method="post" >
+            <div class="form-group">
+            <input type="text" class="form-control" name="username" placeholder="Email id" size="20"/>
         </div>
+        <div class="form-group">
+            <input type="password" class="form-control" name="password" placeholder="Password">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Sign up</button>
+            <button type="button" class="btn btn-danger registerform">Create an Account</button>
+        </div>
+         </form>
     </div>
+</div>
 </div>
 <div class="container" id="listform" title="List your Property">
 	<div class="row">
@@ -281,6 +357,31 @@ List your Property
 			</form>
 		</div>
 	</div>
+</div>
+<div class="container" id="register" title="Create an Account">
+        <div class="row">
+                <div id="registerformdiv" style="margin-left: 10%;margin-right: 10%;">
+                <h4>Please Fill In the Form to continue</h4>
+                <br>
+                        <form id="registerformmain" method="post" >
+                                <div class="form-group">
+                                         <input type="text" class="form-control" name="name" id="name1" placeholder="Name">
+                                </div>
+                                <div class="form-group">
+                                         <input type="text" class="form-control" name="username" id="username1" placeholder="Email id">
+                                </div>
+                                <div class="form-group">
+                                        <input type="password" class="form-control" name="password" id="password1" placeholder="Password">
+                                </div>
+                                <div class="form-group">
+                                        <input type="text" class="form-control" id="phoneno1" name="phoneno" placeholder="Phone Number">
+                                </div>
+                                <div class="form-group">
+                                        <button type="button" onclick="register()"  class="btn btn-danger">Register</button>
+                                </div>
+                        </form>
+                </div>
+        </div>
 </div>
 <div id="logoutform" style="display: none;">
 	<form id="logoutformmain" method="post">
@@ -321,20 +422,14 @@ $(document).ready(function() {
                 message: 'The username is not valid',
                 validators: {
                     notEmpty: {
-                        message: 'The username is required and can\'t be empty'
+                        message: 'The Email is required and can\'t be empty'
                     },        
-                    stringLength: {
-                        min: 6,
-                        max: 30,
-                        message: 'The username must be more than 6 and less than 30 characters long'
-                    },
-                    regexp: {
-                        regexp: /^[a-zA-Z0-9_\.]+$/,
-                        message: 'The username can only consist of alphabetical, number, dot and underscore'
+                    emailAddress: {
+                        message: 'The value is not a valid email address'
                     }
                 }
             },
-             password: {
+            password: {
                 validators: {
                     notEmpty: {
                         message: 'The password is required and can\'t be empty'
@@ -400,7 +495,60 @@ $(document).ready(function() {
     });
 });
 </script>
-
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#registerformmain').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            name: {
+                validators: {
+                    notEmpty: {
+                        message: 'The Name is required and can\'t be empty'
+                    }
+                }
+            },
+            phoneno:{
+                validators: {
+                    notEmpty: {
+                        message: 'Phone no is required and can\'t be empty'
+                    },
+                    stringLength: {
+                        min: 10,
+                        max: 10,
+                        message: 'The phone number should consist of 10 digits'
+                    },
+                    digits: {
+                        message: 'Phone number should consists of digits only'
+                    }
+                }
+            },
+            username: {
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {
+                        message: 'The Email is required and can\'t be empty'
+                    },        
+                    emailAddress: {
+                        message: 'The value is not a valid email address'
+                    }
+                }
+            },
+            password: {
+                validators: {
+                    notEmpty: {
+                        message: 'The password is required and can\'t be empty'
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
 
 </body>
 </html>

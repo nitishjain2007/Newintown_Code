@@ -19,38 +19,10 @@
 	margin-left: 32%;
 }
 #container1{
-	text-align: center;
 	min-height:900px;
 	max-height: 7000px;
 	overflow:hidden;
 	width: 100%;
-}
-.motto {
-margin: 0 auto;
-margin-top: 20px;
-background: rgba(0,0,0,0.3);
-width: 940px;
-border-bottom-right-radius: 7px;
-border-top-right-radius: 7px;
-border-bottom-left-radius: 7px;
-border-top-left-radius: 7px;
-height: 220px;
-display: inline-block;
-/* float: left; */
-text-align: center;
-padding-top: 13px;
-font-family: open_sansregular;
-text-align: center;
-/* top: 5%; */
-}
-
-img.motto_img {
-width: 950px;
-height: 200px;
-/* margin-top: 10px; */
-/* margin-bottom: 67.5%; */
-/* margin-right: 5%; */
-margin-left: 7px;
 }
 #content1{
 	margin-top: 15%;
@@ -61,13 +33,12 @@ margin-left: 7px;
 }
 .notselected{
 	display:block;
-	border: 2px solid;
-	//border-style:solid;
+	border-style:solid;
 	border-color:#bbb #888 #666 #aaa;
-	//border-width:3px 4px 4px 3px;
+	border-width:3px 4px 4px 3px;
 	width:9em;
 	height:2em;
-	background:rgb(167, 143, 143);
+	background:red;
 	color:black;
 	line-height:2;
 	text-align:center;
@@ -76,10 +47,9 @@ margin-left: 7px;
 }
 .selected{
 	display:block;
-	border: 1px solid;
-//	border-style:solid;
+	border-style:solid;
 	border-color: #666 #aaa #bbb #888;
-	//border-width:4px 3px 3px 4px;
+	border-width:4px 3px 3px 4px;
 	width:9em;
 	height:2em;
 	color:black;
@@ -94,8 +64,6 @@ margin-left: 7px;
 }
 .main{
 	display: flex;
-	padding-left: 40%;
-	margin-top: 40px;
 }
 #loginpopup{
 	border-radius: 0px;
@@ -104,7 +72,7 @@ margin-left: 7px;
 }
 #listpopup{
 	border-radius: 0px;
-//	height: 65px;
+	height: 65px;
 }
 #list{
 	border-radius: 0px;

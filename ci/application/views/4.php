@@ -22,34 +22,6 @@ function closecurrent(ids){
 		window["currentview"] = ids;
 	}
 }
-function createuser(){
-	$("#register").dialog('close');
-	var user = document.getElementById("username1").value;
-	var password = document.getElementById("password1").value;
-	var phoneno = document.getElementById("phoneno1").value;
-	$.ajax({
-		type: "POST",
-		url: "createuser",
-		data: {username: user, password: password, phoneno: phoneno}
-	});
-}
-function register(){
-	var user = document.getElementById("username1").value;
-	$.ajax({
-		type: "POST",
-		url: "validate",
-		data: {username: user}
-	})
-		.done(function(value){
-		if(value == "success"){
-			createuser();
-			alert("You are Registered");
-		}
-		else{
-			alert("Username exists");
-		}
-		});
-}
 function test1(){
 	$(".container2").toggle("fast", function(){
 		//Animation complete
@@ -350,26 +322,6 @@ function show(ids){
 	<span class="nvgt1" style="background: #000 url('https://dl.dropboxusercontent.com/u/65639888/image/next.png') no-repeat center; right:0px;" onclick="onClickNext1()"></span>
 	</div>
 	</div>
-	<div class="container" id="<?php echo $locations[$i]->pid . "form" ;?>" title="Shortlist A Property">
-	<div class="row">
-		<div id="<?php echo $locations[$i]->pid . "formdiv" ;?>" style="margin-left: 10%;margin-right: 10%;">
-		<h4>Please Login to Continue</h4>
-		<br>
-			<form id="<?php echo $locations[$i]->pid . "formmain" ;?>" method="post" >
-				<div class="form-group">
-					 <input type="text" class="form-control" name="username" id="<?php echo $locations[$i]->pid . "username" ;?>" placeholder="Username">
-				</div>
-				<div class="form-group">
-					<input type="password" class="form-control" name="password" id="<?php echo $locations[$i]->pid . "password"; ?>" placeholder="Password">
-				</div>
-				<div class="form-group">
-					 <button type="button" onclick="checkuser('<?php echo $locations[$i]->pid;?>')" class="btn btn-primary">Login</button>
-					<button type="button" class="btn btn-danger registerform" onclick="closedialog('<?php echo $locations[$i]->pid; ?>')">Create an Account</button>
-				</div>
-			</form>
-		</div>
-	</div>
-	</div>
 	<div id="<?php echo $locations[$i]->pid . "hidermap";?>" style="display:none;">
 	<input type="text" value="<?php echo $locations[$i]->lati; ?>" id="<?php echo $locations[$i]->pid . "latitude"; ?>" style="display:none;"/>
 	<input type="text" value="<?php echo $locations[$i]->longi; ?>" id="<?php echo $locations[$i]->pid . "longitude"; ?>" style="display:none;"/>
@@ -543,67 +495,7 @@ function show(ids){
     </script>
 <?php }?>
 <div id="testf">
-<div class="container" id="register" title="Create an Account">
-        <div class="row">
-                <div id="registerformdiv" style="margin-left: 10%;margin-right: 10%;">
-                <h4>Please Fill In the Form to continue</h4>
-                <br>
-                        <form id="registerformmain" method="post" >
-                                <div class="form-group">
-                                         <input type="text" class="form-control" name="username" id="username1" placeholder="Username">
-                                </div>
-                                <div class="form-group">
-                                        <input type="password" class="form-control" name="password" id="password1" placeholder="Password">
-                                </div>
-                                <div class="form-group">
-                                        <input type="text" class="form-control" id="phoneno1" name="phoneno" placeholder="Phone Number">
-                                </div>
-                                <div class="form-group">
-                                        <button type="button" onclick="register()"  class="btn btn-danger">Register</button>
-                                </div>
-                        </form>
-                </div>
-        </div>
-        </div>
 <div id="userdetails" style="display:none;"><?php if($log == "loggedin"){ echo $user; }?></div>
 </div>
-    <script>
-    $(function() {
-        var name = $( "#name" ),
-        email = $( "#email" ),
-        password = $( "#password" ),
-        allFields = $( [] ).add( name ).add( email ).add( password ),
-        tips = $( ".validateTips" );
-
-        function updateTips( t ) {
-            tips
-                .text( t )
-                .addClass( "ui-state-highlight" );
-            setTimeout(function() {
-                tips.removeClass( "ui-state-highlight", 1500 );
-            }, 500 );
-        }
-        $( "#register").dialog({
-            autoOpen: false, 
-            height: 500, 
-            width: 400,
-            modal: true,
-            buttons: {
-                Cancel: function() {
-                        $( this ).dialog( "close" );
-                }
-            },
-            close: function() {
-                allFields.val( "" ).removeClass( "ui-state-error" );
-            }
-        });
-
-        $( ".registerform")
-                .button()
-                .click(function() {
-                        $( "#register" ).dialog( "open" );
-                });
-    });
-    </script>
 </body>
 </html>

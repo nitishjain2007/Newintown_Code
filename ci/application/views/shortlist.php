@@ -81,6 +81,60 @@ function logout(){
         		window.location="http://newintown.in/ci/index.php/controller1/main";	
                 });
 }
+function requestsite(){
+    var username = document.getElementById("username").value;
+    var password = document.getElementById("password").value;
+    alert(username);
+    alert(password);
+    $.ajax({
+        type: "POST",
+        url: "checkuser1",
+        data: {username: username,password: password}
+    })
+        .done(function(value){
+        if(value == "success"){
+            $("#loginform").dialog('close');
+            alert("We will call you shortly for more details.");
+        }
+        else if(value == "alreadysitevisit"){
+            alert("You can't have more sitevisits");
+        }
+        else{
+            alert("Credentials provided are not authentic");
+        }
+        });
+}
+function createuser(){
+    $("#register").dialog('close');
+    var name = document.getElementById("name1").value;
+    var user = document.getElementById("username1").value;
+    var password = document.getElementById("password1").value;
+    var phoneno = document.getElementById("phoneno1").value;
+    $.ajax({
+        type: "POST",
+        url: "createuser",
+        data: {name: name, username: user, password: password, phoneno: phoneno}
+    });
+}
+function register(){
+    $( "#loginform" ).dialog( "close" );
+    var user = document.getElementById("username1").value;
+    $.ajax({
+        type: "POST",
+        url: "validate",
+        data: {username: user}
+    })
+        .done(function(value){
+        if(value == "success"){
+            createuser();
+            alert("You are Registered");
+        }
+        else{
+            alert("Username exists");
+            $("#register").dialog('close');
+        }
+        });
+}
 function hide(ids){
         h = "#" + ids + "hider";
         $(h).hide();
@@ -123,10 +177,93 @@ function removeshortflat(ids){
             });
 }
 </script>
+<script>
+    $(function() {
+        var name = $( "#name" ),
+            email = $( "#email" ),
+            password = $( "#password" ),
+            allFields = $( [] ).add( name ).add( email ).add( password ),
+            tips = $( ".validateTips" );
+
+        function updateTips( t ) {
+            tips
+                .text( t )
+                .addClass( "ui-state-highlight" );
+            setTimeout(function() {
+                tips.removeClass( "ui-state-highlight", 1500 );
+            }, 500 );
+        }
+        $( "#loginform" ).dialog({
+            autoOpen: false,
+            height: 300,
+            width: 350,
+            modal: true,
+            buttons: {
+                Cancel: function() {
+                    $( this ).dialog( "close" );
+                }
+            },
+            close: function() {
+                allFields.val( "" ).removeClass( "ui-state-error" );
+            }
+        });
+
+        $( "#sitevisitpopup" )
+            .button()
+            .click(function() {
+                $( "#loginform" ).dialog( "open" );
+            });
+    });
+</script>
+<script>
+    $(function() {
+        var name = $( "#name" ),
+        email = $( "#email" ),
+        password = $( "#password" ),
+        allFields = $( [] ).add( name ).add( email ).add( password ),
+        tips = $( ".validateTips" );
+
+        function updateTips( t ) {
+            tips
+                .text( t )
+                .addClass( "ui-state-highlight" );
+            setTimeout(function() {
+                tips.removeClass( "ui-state-highlight", 1500 );
+            }, 500 );
+        }
+        $( "#register").dialog({
+            autoOpen: false, 
+            height: 500, 
+            width: 400,
+            modal: true,
+            buttons: {
+                Cancel: function() {
+                        $( this ).dialog( "close" );
+                }
+            },
+            close: function() {
+                allFields.val( "" ).removeClass( "ui-state-error" );
+            }
+        });
+
+        $( ".registerform")
+                .button()
+                .click(function() {
+                        $( "#register" ).dialog( "open" );
+                });
+    });
+</script>
 </head>
 <body>
 <div id="header" style="height:65px;">
 <img src="../../static/images/newintown_in.png" height="55px" width="400px">
+<?php if($log == "loggedin"){?>
+<button type="button" id="user" class="btn btn-lg btn-info" data-container="body" data-toggle="popover" title="username" data-placement="bottom" style="margin-top:0.8%;" >
+  Welcome <?php echo " ";
+                echo $user;
+            ?>
+</button>
+<?php }?>
 <div id="logindiv" style="float: right;">
 <font color="white">
 <button type="button" id="logoutpopup" class="btn btn-lg btn-danger" data-container="body" data-toggle="popover" title="Logout" data-placement="bottom" style = "border-radius: 0px;height:65px;width:100px;" onclick="logout()" >
@@ -142,6 +279,15 @@ function removeshortflat(ids){
 </div>
 <div id="container1">
 <div id="content1">
+<div id="logsearch">
+<?php if($log == "loggedin"){
+    echo "Your shortlist history";
+}
+?>
+</div>
+<div id="div2" style="display:none;">
+<img style="display:block;margin-left:auto;margin-right:auto;height:150px;width:150px;margin-top:15%;" src="../../static/images/loader.gif">
+</div>
 <div id="div1">
 <?php for($i=0;$i<count($locations);$i++){?>
     <div id="<?php echo $locations[$i]->pid; ?>" style="float:left;" onclick="initdelay(this.id)"><img src="<?php echo $locations[$i]->image_1; ?>" height="100px" width="100px">
@@ -567,26 +713,6 @@ function removeshortflat(ids){
   <span class="nvgt1" style="background: #000 url('https://dl.dropboxusercontent.com/u/65639888/image/next.png') no-repeat center; right:0px;" onclick="onClickNext1()"></span>
   </div>
   </div>
-  <div class="container" id="<?php echo $locations1[$i]->pid . "form" ;?>" title="Shortlist A Property">
-  <div class="row">
-    <div id="<?php echo $locations1[$i]->pid . "formdiv" ;?>" style="margin-left: 10%;margin-right: 10%;">
-    <h4>Please Login to Continue</h4>
-    <br>
-      <form id="<?php echo $locations1[$i]->pid . "formmain" ;?>" method="post" >
-        <div class="form-group">
-           <input type="text" class="form-control" name="username" id="<?php echo $locations1[$i]->pid . "username" ;?>" placeholder="Username">
-        </div>
-        <div class="form-group">
-          <input type="password" class="form-control" name="password" id="<?php echo $locations1[$i]->pid . "password"; ?>" placeholder="Password">
-        </div>
-        <div class="form-group">
-           <button type="button" onclick="checkuser('<?php echo $locations1[$i]->pid;?>')" class="btn btn-primary">Login</button>
-          <button type="button" class="btn btn-danger registerform" onclick="closedialog('<?php echo $locations1[$i]->pid; ?>')">Create an Account</button>
-        </div>
-      </form>
-    </div>
-  </div>
-  </div>
   <div id="<?php echo $locations1[$i]->pid . "hidermap";?>" style="display:none;">
   <input type="text" value="<?php echo $locations1[$i]->lati; ?>" id="<?php echo $locations1[$i]->pid . "latitude"; ?>" style="display:none;"/>
   <input type="text" value="<?php echo $locations1[$i]->longi; ?>" id="<?php echo $locations1[$i]->pid . "longitude"; ?>" style="display:none;"/>
@@ -790,6 +916,49 @@ function removeshortflat(ids){
                 </div>
         </div>
 	</div>
+<div class="container" id="loginform" title="Login">
+    <div class="row">
+        <div id="loginformdiv" style="margin-left: 10%;margin-right: 10%;">
+        <form id="loginformmain" method="post" >
+            <div class="form-group">
+            <input type="text" class="form-control" name="username" id="username"placeholder="Email id" size="20"/>
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+        </div>
+        <div class="form-group">
+            <button type="button" class="btn btn-primary" onclick="requestsite()">Sign up</button>
+            <button type="button" class="btn btn-danger registerform">Create an Account</button>
+        </div>
+         </form>
+    </div>
+    </div>
+</div>
+<div class="container" id="register" title="Create an Account">
+        <div class="row">
+                <div id="registerformdiv" style="margin-left: 10%;margin-right: 10%;">
+                <h4>Please Fill In the Form to continue</h4>
+                <br>
+                        <form id="registerformmain" method="post" >
+                                <div class="form-group">
+                                         <input type="text" class="form-control" name="name" id="name1" placeholder="Name">
+                                </div>
+                                <div class="form-group">
+                                         <input type="text" class="form-control" name="username" id="username1" placeholder="Email id">
+                                </div>
+                                <div class="form-group">
+                                        <input type="password" class="form-control" name="password" id="password1" placeholder="Password">
+                                </div>
+                                <div class="form-group">
+                                        <input type="text" class="form-control" id="phoneno1" name="phoneno" placeholder="Phone Number">
+                                </div>
+                                <div class="form-group">
+                                        <button type="button" onclick="register()"  class="btn btn-danger">Register</button>
+                                </div>
+                        </form>
+                </div>
+        </div>
+</div>
 <script>
         $(function() {
                 var name = $( "#name" ),
@@ -821,12 +990,103 @@ function removeshortflat(ids){
                         }
                 });
 
-                $( "#sitevisitpopup" )
+                $( "#sitevisitpopup4" )
                         .button()
                         .click(function() {
                                 $( "#sitevisitf" ).dialog( "open" );
                         });
         });
+</script>
+<script>
+window.onload = function(){
+    $('#div2').hide();
+    $('#div1').show();
+}
+</script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#loginformmain').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            username: {
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {
+                        message: 'The Email is required and can\'t be empty'
+                    },        
+                    emailAddress: {
+                        message: 'The value is not a valid email address'
+                    }
+                }
+            },
+            password: {
+                validators: {
+                    notEmpty: {
+                        message: 'The password is required and can\'t be empty'
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#registerformmain').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            name: {
+                validators: {
+                    notEmpty: {
+                        message: 'The Name is required and can\'t be empty'
+                    }
+            },
+            username: {
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {
+                        message: 'The Email is required and can\'t be empty'
+                    },        
+                    emailAddress: {
+                        message: 'The value is not a valid email address'
+                    }
+                }
+            },
+            password: {
+                validators: {
+                    notEmpty: {
+                        message: 'The password is required and can\'t be empty'
+                    }
+                }
+            },
+            phoneno:{
+                validators: {
+                    notEmpty: {
+                        message: 'Phone no is required and can\'t be empty'
+                    },
+                    stringLength: {
+                        min: 10,
+                        max: 10,
+                        message: 'The phone number should consist of 10 digits'
+                    },
+                    digits: {
+                        message: 'Phone number should consists of digits only'
+                    }
+                }
+            }
+        }
+    });
+});
 </script>
 </body>
 </html>

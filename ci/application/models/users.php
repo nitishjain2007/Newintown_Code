@@ -173,5 +173,16 @@ class Users extends CI_Model{
 		$this->db->where('sessionid',$sessionname);
 		$this->db->update('sessions',$data);
 	}
+	function createsitevisit($name,$username,$phone,$shortpg,$shortflat){
+		$data = array('name' => $name,"username"=>$username,"phoneno"=>$phone,"shortpg"=>$shortpg,"shortflat"=>$shortflat);
+		$this->db->insert('sitevisits',$data);	
+	}
+	function getuserinfor($username){
+		$this->db->select('*');
+		$this->db->from('sitevisits');
+		$this->db->where_in('username',$username);
+		$result = $this->db->get();
+		return $result;
+	}
 }
 ?>

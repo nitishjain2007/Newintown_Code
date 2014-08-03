@@ -83,6 +83,61 @@ class Controller1 extends CI_Controller{
 		$this->load->view("4",$data);
 	}
 	function viewshortlist(){
+		if(!$this->input->cookie('log')){
+			$cookie = array(
+				'name'   => 'log',
+        		'value'  => 'loggedout',
+        		'expire' => '1000000',
+        		'path'   => '/',
+        		'prefix' => '',
+    		);
+    	$this->input->set_cookie($cookie);
+    	$_COOKIE['log'] = 'loggedout';
+    	}
+    	if($this->input->cookie('log') == "loggedin"){
+    		$user = $_COOKIE['newuser'];
+    		$this->load->model("users");
+    		$f = $this->users->retrievedata($user);
+    		foreach($f->result() as $i){
+    			$userdata = $i;
+    		}
+    		if($userdata->shortpg == NULL && $userdata->shortflat == NULL){
+    			$this->load->view('viewshortnone');
+    		}
+    		else{
+    			$short = $userdata->shortpg;
+    			$short1 = $userdata->shortflat;
+    			$list = array();
+    			$list1 = array();
+    			if($short != NULL || $short != ""){
+    				$shorted = explode(',',$short);
+    				$locations = $this->users->getshort($shorted);
+    				foreach($locations->result() as $i){
+						$list[] = $i;
+					}
+    			}
+    			if($short1 != NULL || $short1 != ""){
+    				$shorted1 = explode(',',$short1);
+    				$locations = $this->users->getshortflat($shorted1);
+    				foreach($locations->result() as $i){
+						$list1[] = $i;
+					}
+    			}
+			    for($j=0;$j<count($list);$j++){
+			        $temp = explode(',',$list[$j]->gps);
+	                $list[$j]->lati = $temp[0];
+	                $list[$j]->longi = $temp[1];
+				}
+			    for($j=0;$j<count($list1);$j++){
+			        $temp = explode(',',$list1[$j]->gps);
+	                $list1[$j]->lati = $temp[0];
+	                $list1[$j]->longi = $temp[1];
+				}
+				$data = array("locations" => $list,"locations1" => $list1,"log"=>"loggedin","user"=>$_COOKIE['newuser']);
+				$this->load->view("shortlist",$data);
+    		}
+    	}
+    	else{
 		if(!$this->input->cookie('session')){
 			$this->load->view('viewshortnone');
 		}
@@ -127,10 +182,11 @@ class Controller1 extends CI_Controller{
                 $list1[$j]->lati = $temp[0];
                 $list1[$j]->longi = $temp[1];
 			}
-			$data = array("locations" => $list,"locations1" => $list1);
+			$data = array("locations" => $list,"locations1" => $list1,"log"=>"loggedout","user"=>"");
 			$this->load->view("shortlist",$data);	
 			}
 		}
+	}
 	}
 	function logout(){
                 delete_cookie("log");
@@ -267,7 +323,47 @@ class Controller1 extends CI_Controller{
 			$this->users->addshortpidflat($sessionname,$shorted);
 			echo "success";
 		}
-	}	
+	}
+	function checkuser1(){
+		$username = $_POST["username"];
+		$password = $_POST["password"];
+		$data = array("username" => $username, "password" => $password);
+		$this->load->model("users");
+		$f = $this->users->checkuser($data);
+		$j=0;
+		foreach($f->result() as $i){
+			$j = $j + 1;
+		}
+		if($j == 1){
+			$userinfo = $this->users->check($username);
+			foreach($userinfo->result() as $i){
+				$phone = $i->phoneno;
+				$shortpg = $i->shortpg;
+				$shortflat = $i->shortflat;
+				$name = $i->name;
+			}
+			$flag = "no";
+			$g = $this->users->getuserinfor($username);
+			foreach($g->result() as $i){
+				$flag = "yes";
+			}
+			if($flag == "no"){
+				$f=$this->users->getsessioninfo($_COOKIE['session']);
+				foreach($f->result() as $i){
+					$shortpg1 = $i->shortpg;
+					$shortflat1 = $i->shortflat;
+				}
+				$this->users->createsitevisit($name,$username,$phone,$shortpg1,$shortflat1);
+				echo "success";
+			}
+			else{
+				echo "alreadysitevisit";
+			}
+		}
+		else{
+			echo "failure";
+		}
+	}
 	function checkuser(){
 		$username = $_POST["username"];
 		$password = $_POST["password"];
@@ -286,10 +382,11 @@ class Controller1 extends CI_Controller{
 		}
 	}
 	function createuser(){
+		$name = $_POST["name"];
 		$username = $_POST["username"];
 		$password = $_POST["password"];
 		$phoneno = $_POST["phoneno"];
-		$data = array("username" => $username, "password" => $password, "phoneno" => $phoneno);
+		$data = array("name" => $name,"username" => $username, "password" => $password, "phoneno" => $phoneno);
 		$this->load->model("users");
 		$this->users->createuser($data);
 	}

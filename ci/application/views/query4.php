@@ -66,7 +66,7 @@ function giveresult(){
     }
     else{
     var type = "pg";
-    window.location="http://newintown/ci/index.php/controller1/query?lng="+lng+"&lat="+lat+"&type="+type;
+    window.location="http://newintown.co.in/ci/index.php/controller1/query?lng="+lng+"&lat="+lat+"&type="+type;
 }
 }
 function initialize(){
@@ -96,6 +96,44 @@ window.onload=function(){
         document.getElementById("logoutpopup").click();
     }
 }
+</script>
+<script>
+    $(function() {
+        var name = $( "#name" ),
+        email = $( "#email" ),
+        password = $( "#password" ),
+        allFields = $( [] ).add( name ).add( email ).add( password ),
+        tips = $( ".validateTips" );
+
+        function updateTips( t ) {
+            tips
+                .text( t )
+                .addClass( "ui-state-highlight" );
+            setTimeout(function() {
+                tips.removeClass( "ui-state-highlight", 1500 );
+            }, 500 );
+        }
+        $( "#register").dialog({
+            autoOpen: false, 
+            height: 500, 
+            width: 400,
+            modal: true,
+            buttons: {
+                Cancel: function() {
+                        $( this ).dialog( "close" );
+                }
+            },
+            close: function() {
+                allFields.val( "" ).removeClass( "ui-state-error" );
+            }
+        });
+
+        $( ".registerform")
+                .button()
+                .click(function() {
+                        $( "#register" ).dialog( "open" );
+                });
+    });
 </script>
 <script>
     $(function() {
@@ -177,6 +215,11 @@ window.onload=function(){
 function viewshort(ids){
 	window.location = "http://localhost/ci/index.php/controller1/viewshortlist"; 
 }
+function changetoflat(){
+    var lng = '<?php echo $lng; ?>';
+    var lat = '<?php echo $lat; ?>';
+    window.location="http://newintown.co.in/ci/index.php/controller1/query?lng="+ lng + "&lat=" + lat + "&type=flat";
+}
 function checkshort(){
 	var user = document.getElementById("shortusernamevar").value;
 	var password = document.getElementById("shortpasswordvar").value;
@@ -223,6 +266,37 @@ function genderchange(ids){
         window["gendertype"] = window["gendertype"].substr(1);
     }
     changecontent();
+}
+function createuser(){
+    $("#register").dialog('close');
+    var name = document.getElementById("name1").value;
+    var user = document.getElementById("username1").value;
+    var password = document.getElementById("password1").value;
+    var phoneno = document.getElementById("phoneno1").value;
+    $.ajax({
+        type: "POST",
+        url: "createuser",
+        data: {name: name, username: user, password: password, phoneno: phoneno}
+    });
+}
+function register(){
+    $( "#loginform" ).dialog( "close" );
+    var user = document.getElementById("username1").value;
+    $.ajax({
+        type: "POST",
+        url: "validate",
+        data: {username: user}
+    })
+        .done(function(value){
+        if(value == "success"){
+            createuser();
+            alert("You are Registered");
+        }
+        else{
+            alert("Username exists");
+            $("#register").dialog('close');
+        }
+        });
 }
 function sharingchange(ids){
     var clicked = document.getElementById(ids);
@@ -318,7 +392,7 @@ function test(){
 </head>
 <body>
 <div id="header">
-<img src="../../static/images/newintown_in.png" height="55px" width="400px">
+<a href="http://newintown.in/ci/index.php/controller1/main"><img src="../../static/images/newintown_in.png" height="55px" width="250px"></a>
 <?php if($log == "loggedin"){?>
 <button type="button" id="user" class="btn btn-lg btn-info" data-container="body" data-toggle="popover" title="username" data-placement="bottom" style="margin-top:0.8%;" >
   Welcome <?php echo " ";
@@ -328,7 +402,7 @@ function test(){
 <?php }?>   
 <div id="logindiv" style="float: right;">
 <font color="white">
-<button type="button" id="listpopup" class="btn btn-lg btn-primary" data-container="body" data-toggle="popover" title="List your Property" data-placement="bottom" >
+<button type="button" id="listpopup" class="btn btn-lg btn-primary" data-container="body" data-toggle="popover" style="height:65px;" title="List your Property" data-placement="bottom" >
 List your Property
 </button>                               
 <?php if($log == "loggedout" || $log == "wrong"){ ?>
@@ -437,7 +511,7 @@ List your Property
         <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle" style="height:50px;margin-top:10px;border-radius:0px;margin-left:-4px;"><span class="caret"></span></button>
         <ul class="dropdown-menu">
             <li><a href="#">PG</a></li>
-            <li><a href="#">Rent</a></li>
+            <li><a href="#" onclick="changetoflat()">Flat</a></li>
         </ul>
         </div>
     </div>
@@ -448,7 +522,7 @@ List your Property
 <div id="div1" style="display:none;">
 </div>
 <div id="div2">
-<img style="display:block;margin-left:auto;margin-right:auto;height:100px;width:100px;" src="../../static/images/loader.gif">
+<img style="display:block;margin-left:auto;margin-right:auto;height:150px;width:150px;margin-top:15%;" src="../../static/images/loader.gif">
 </div>
 <button id="button2" style="display: none;">Get External Content</button>
 </div>
@@ -462,34 +536,18 @@ List your Property
     <div class="row">
         <div id="loginformdiv" style="margin-left: 10%;margin-right: 10%;">
 	    <form id="loginformmain" method="post" >
-	    	<div class="form-group">
-			<input type="text" class="form-control" name="username" placeholder="Username" size="20"/>
+	    <div class="form-group">
+			<input type="text" class="form-control" name="username" placeholder="Email id" size="20"/>
 		</div>
 		<div class="form-group">
 			<input type="password" class="form-control" name="password" placeholder="Password">
 		</div>
 		<div class="form-group">
 			<button type="submit" class="btn btn-primary">Sign up</button>
+            <button type="button" class="btn btn-danger registerform">Create an Account</button>
 		</div>
 	     </form>
 	</div>
-    </div>
-</div>
-<div class="container" id="shortloginform" title="Login">
-    <div class="row">
-        <div id="shortloginformdiv" style="margin-left: 10%;margin-right: 10%;">
-            <form id="loginformshort">
-                <div class="form-group">
-                        <input type="text" class="form-control" name="username" id="shortusernamevar" placeholder="Username" size="20"/>
-                </div>
-                <div class="form-group">
-                        <input type="password" class="form-control" name="password" id="shortpasswordvar" placeholder="Password">
-                </div>
-                <div class="form-group">
-                        <button type="button" onclick="checkshort()" class="btn btn-primary">Sign up</button>
-                </div>
-             </form>
-        </div>
     </div>
 </div>
 <div class="container" id="listform" title="List your Property">
@@ -511,6 +569,31 @@ List your Property
 	    </form>
 	</div>
     </div>
+</div>
+<div class="container" id="register" title="Create an Account">
+        <div class="row">
+                <div id="registerformdiv" style="margin-left: 10%;margin-right: 10%;">
+                <h4>Please Fill In the Form to continue</h4>
+                <br>
+                        <form id="registerformmain" method="post" >
+                                <div class="form-group">
+                                         <input type="text" class="form-control" name="name" id="name1" placeholder="Name">
+                                </div>
+                                <div class="form-group">
+                                         <input type="text" class="form-control" name="username" id="username1" placeholder="Email id">
+                                </div>
+                                <div class="form-group">
+                                        <input type="password" class="form-control" name="password" id="password1" placeholder="Password">
+                                </div>
+                                <div class="form-group">
+                                        <input type="text" class="form-control" id="phoneno1" name="phoneno" placeholder="Phone Number">
+                                </div>
+                                <div class="form-group">
+                                        <button type="button" onclick="register()"  class="btn btn-danger">Register</button>
+                                </div>
+                        </form>
+                </div>
+        </div>
 </div>
 <div id="usercontentsform" style="display:none;">
 	<input type="text" <?php if($log == "loggedin"){ ?> value="<?php echo $user; ?>" <?php } ?> id="username">
@@ -545,16 +628,10 @@ $(document).ready(function() {
                 message: 'The username is not valid',
                 validators: {
                     notEmpty: {
-                        message: 'The username is required and can\'t be empty'
+                        message: 'The Email is required and can\'t be empty'
                     },        
-                    stringLength: {
-                        min: 6,
-                        max: 30,
-                        message: 'The username must be more than 6 and less than 30 characters long'
-                    },
-                    regexp: {
-                        regexp: /^[a-zA-Z0-9_\.]+$/,
-                        message: 'The username can only consist of alphabetical, number, dot and underscore'
+                    emailAddress: {
+                        message: 'The value is not a valid email address'
                     }
                 }
             },
@@ -648,6 +725,75 @@ $(document).ready(function() {
                     regexp: {
                         regexp: /^[a-zA-Z0-9_\.]+$/,
                         message: 'The username can only consist of alphabetical, number, dot and underscore'
+                    }
+                }
+            },
+            phoneno:{
+                validators: {
+                    notEmpty: {
+                        message: 'Phone no is required and can\'t be empty'
+                    },
+                    stringLength: {
+                        min: 10,
+                        max: 10,
+                        message: 'The phone number should consist of 10 digits'
+                    },
+                    digits: {
+                        message: 'Phone number should consists of digits only'
+                    }
+                }
+            },
+            password: {
+                validators: {
+                    notEmpty: {
+                        message: 'The password is required and can\'t be empty'
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#registerformmain').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            name: {
+                validators: {
+                    notEmpty: {
+                        message: 'The Name is required and can\'t be empty'
+                    }
+                }
+            },
+            username: {
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {
+                        message: 'The Email is required and can\'t be empty'
+                    },        
+                    emailAddress: {
+                        message: 'The value is not a valid email address'
+                    }
+                }
+            },
+            phoneno:{
+                validators: {
+                    notEmpty: {
+                        message: 'Phone no is required and can\'t be empty'
+                    },
+                    stringLength: {
+                        min: 10,
+                        max: 10,
+                        message: 'The phone number should consist of 10 digits'
+                    },
+                    digits: {
+                        message: 'Phone number should consists of digits only'
                     }
                 }
             },
