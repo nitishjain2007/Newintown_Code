@@ -24,6 +24,8 @@ function removeshort1(ids){
 			for(i=0;i<elements.length;i++){
 			elements[i].innerHTML = "Shortlist";
 			}
+			var j = "#" + ids + "he";
+        	$(j).hide(); 
 		});
 }
 function addshort1(ids){
@@ -43,6 +45,7 @@ function addshort1(ids){
 				for(i=0;i<elements.length;i++){
 					elements[i].innerHTML = "Remove Shortlist";
 				}
+				makelinks(ids);
 			}
 			else{
 				alert("You Can Shortlist max 6 Properties");
