@@ -3,6 +3,8 @@
 <head>
 <link href="../../bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="../../bootstrapvalidator/dist/css/bootstrapValidator.css" rel="stylesheet">
+<link href="../../bootstrap-timepicker/css/bootstrap-responsive.css">
+<link href="../../bootstrap-timepicker/css/bootstrap-timepicker.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script> 
 <script type="text/javascript" src="../../bootstrapvalidator/vendor/jquery/jquery-1.10.2.min.js"></script>
 <link rel="stylesheet" href="../../jquery-ui/development-bundle/themes/base/jquery.ui.all.css">
@@ -23,10 +25,13 @@
 <script src="../../bootstrap/js/popover.js"></script>
 <script src="../../bootstrap/js/alert.js"></script>
 <script src="../../bootstrap/js/dropdown.js"></script>
+<script src="../../bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1H88PyXHfW2qihya9R0VwoOF3cKmlSmY&sensor=FALSE&libraries=places">
     </script>
 <script src="../../static/js/viewer.js"></script>
+<script src="../../static/js/bootstrap-datepicker.js"></script>
+<link rel="stylesheet" href="../../static/css/datepicker.css">
 <link rel="stylesheet" href="../../static/css/mainpage.css">
 <style>
 .dropdown-menu{
@@ -41,6 +46,11 @@
     display: none;
 }
 </style>
+<script>
+$(function() {
+$('.datepicker').datepicker();
+});
+</script>
 <script>
 function logout(){
     document.getElementById("logoutformmain").submit();
@@ -68,6 +78,30 @@ function giveresult(){
     var type = "pg";
     window.location="http://newintown.co.in/ci/index.php/controller1/query?lng="+lng+"&lat="+lat+"&type="+type;
 }
+}
+function makesitevisit(){
+    var username = document.getElementById("username5").value;
+    var name = document.getElementById("name5").value;
+    var phone = document.getElementById("phoneno5").value;
+    var pickdate = document.getElementById("datepicker1").value;
+    var picktime = document.getElementById("timepicker1").value;
+    var pickplace = document.getElementById("pickpoint5").value;
+    $.ajax({
+                type: "POST",
+                url: "makesitevisit",
+                data: {username: username,name: name,phone: phone,pickdate: pickdate,picktime: picktime,pickplace: pickplace}
+        })
+                .done(function(value){
+                    if(value == "failure"){
+                        alert("Already registered for Site Visit");
+                    }
+                    else if(value == "wrong"){
+                        alert("Please Shortlist first");
+                    }
+                    else{
+                        alert("Registered for Site Visit");
+                    }
+                });
 }
 function initialize(){
 var defaultBounds = new google.maps.LatLngBounds(
@@ -348,6 +382,55 @@ function changecontent(){
 
 <script type="text/javascript" src="../../static/js/slider.js"></script>
 <script>
+var choosen = "";
+var currentview = "";
+function closecurrent(ids){
+    var state = 0;
+    if(window["currentview"]!=""){
+        var h = "#" + window["currentview"] + "_toggler";
+        if(window["currentview"]!=ids){
+            $(h).toggle("slow", function(){
+                    //Animation complete
+            });
+        }
+    }
+    if(window["currentview"] == ids){
+        window["currentview"] = "";
+        state=1;
+    }
+    if(state==0){
+        window["currentview"] = ids;
+    }
+}
+function getshortlisted(){
+    $.ajax({
+                type: "POST",
+                url: "getcurrentshortlistedpg"
+        })
+                .done(function(value){
+                    var values = value.split(",");
+                    for(i=0;i<values.length;i++){
+                        makelinks(values[i]);
+                    }
+                });
+}
+function makelinks(value){
+        var li=document.createElement('h5');
+        li.innerHTML = value;
+        li.id = value + "he";
+        ids = '#' + value + "he";
+        $('#shortlistedprop').append(li);
+        $(document).on('click', ids, function(){
+            window["choosen"] = li.id.slice(0,-2);
+            var h = document.getElementById(window["choosen"]);
+            if(h != null){
+                document.getElementById(window["choosen"]).click();
+            }
+            else{
+                window.location = "http://localhost/ci/index.php/controller1/viewshortlist";
+            }
+    });
+}
 $(document).ready(function(){
   $(document).on("click","#button2", function(){
     var lng = document.getElementById("lng").innerHTML;
@@ -358,7 +441,7 @@ $(document).ready(function(){
         var user = "";
     <?php } ?> 
 
-    $("#div1").load("four?lng=" + lng + "&lat=" + lat + "&gender=all&sharing=all&adavance=" + window["advance"] + "&logstatus=" + "<?php echo $log; ?>" + "&user=" + user,function(){$('#div2').hide();$('#div1').show();});
+    $("#div1").load("four?lng=" + lng + "&lat=" + lat + "&gender=all&sharing=all&adavance=" + window["advance"] + "&logstatus=" + "<?php echo $log; ?>" + "&user=" + user,function(){$('#div2').hide();$('#div1').show();getshortlisted();});
   });
 });
 </script>
@@ -517,14 +600,57 @@ List your Property
     </div>
 </div>
 </div>
-<div id="container1">
-<div id="content1">
+<div id="container2">
+<div id="content1" style="width:82%;float:left;">
 <div id="div1" style="display:none;">
 </div>
 <div id="div2">
 <img style="display:block;margin-left:auto;margin-right:auto;height:150px;width:150px;margin-top:15%;" src="../../static/images/loader.gif">
 </div>
 <button id="button2" style="display: none;">Get External Content</button>
+</div>
+<div style="float:left;min-height:900px;max-height:7000px;width:18%;background-color:#EFEFF2;">
+<button type="button" id="listpopup" class="btn btn-lg btn-primary" data-container="body" style="height:65px;width:100%;"data-toggle="popover" title="List your Property" data-placement="bottom" >
+Site Visit Form
+</button>
+<br>
+<br>
+<div id="shortlistedprop" style="margin-left:5%;">
+<h5 style="margin-letf:10px;">Your shortlisted properties</h5>
+</div>
+<br>
+<div class="container" id="sitevisitform" title="Sitevisit" style="width:90%;">
+    <div class="row">
+        <div id="sitevisitformdiv">
+        <form id="sitevisitformmain" method="post" >
+        <div class="form-group">
+            <input type="text" class="form-control" name="name" id="name5" placeholder="Name" size="20"/>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" name="username" id="username5" placeholder="Email" size="20"/>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" name="phoneno" id="phoneno5" placeholder="Phone Number">
+        </div>
+        <div class="form-group">
+            <input id="datepicker1" type="text" class="form-control datepicker" name="date" placeholder="Pick Up Date">
+        </div> 
+        <div class="input-append bootstrap-timepicker form-group">
+            <input id="timepicker1" type="text" class="input-small form-control" placeholder="Pick Up Time">
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" name="point" id="pickpoint5" placeholder="Pick Up Point">
+        </div>
+        <div class="form-group">
+            <button type="button" onclick="makesitevisit()" class="btn btn-danger">Visit</button>
+        </div> 
+        </form>
+    </div>
+    </div>
+</div>
+<script type="text/javascript">
+$('#timepicker1').timepicker();
+</script>
 </div>
 </div>
 <div style="display:none;">
@@ -639,6 +765,53 @@ $(document).ready(function() {
                 validators: {
                     notEmpty: {
                         message: 'The password is required and can\'t be empty'
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#sitevisitformmain').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            name: {
+                validators: {
+                    notEmpty: {
+                        message: 'The Name is required and can\'t be empty'
+                    }
+                }
+            },
+            phoneno:{
+                validators: {
+                    notEmpty: {
+                        message: 'Phone no is required and can\'t be empty'
+                    },
+                    stringLength: {
+                        min: 10,
+                        max: 10,
+                        message: 'The phone number should consist of 10 digits'
+                    },
+                    digits: {
+                        message: 'Phone number should consists of digits only'
+                    }
+                }
+            },
+            username: {
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {
+                        message: 'The Email is required and can\'t be empty'
+                    },        
+                    emailAddress: {
+                        message: 'The value is not a valid email address'
                     }
                 }
             }

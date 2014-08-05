@@ -364,6 +364,69 @@ class Controller1 extends CI_Controller{
 			echo "failure";
 		}
 	}
+	function getcurrentshortlistedpg(){
+		if($_COOKIE['session']){
+			$this->load->model('users');
+			$f = $this->users->getsessioninfo($_COOKIE["session"]);
+			foreach($f->result() as $i){
+				$shorted = $i->shortpg;
+			}
+			echo $shorted;
+		}
+		else{
+			echo "false";
+		}
+	}
+	function getcurrentshortlistedflat(){
+		if($_COOKIE['session']){
+			$this->load->model('users');
+			$f = $this->users->getsessioninfo($_COOKIE["session"]);
+			foreach($f->result() as $i){
+				$shorted = $i->shortflat;
+			}
+			echo $shorted;
+		}
+		else{
+			echo "false";
+		}
+	}
+	function makesitevisit(){
+		$name = $_POST["name"];
+		$username = $_POST["username"];
+		$phone = $_POST["phone"];
+		$pickdate = $_POST["pickdate"];
+		$picktime = $_POST["picktime"];
+		$pickplace = $_POST["pickplace"];
+		$this->load->model("users");
+		$j = 0;
+		$sessioninfo = $this->users->getuserinfor($username);
+		foreach($sessioninfo->result() as $i){
+			$j = $j + 1;
+		}
+		if($j == 1){
+			echo "failure";
+		}
+		else{
+			$f = $this->users->getsessioninfo($_COOKIE["session"]);
+			$shortpg = "";
+			$shortflat = "";
+			foreach ($f->result() as $i){
+				if(!empty($i->shortpg)){
+					$shortpg = $i->shortpg;
+				}
+				if(!empty($i->shortflat)){
+					$shortflat = $i->shortflat;
+				}
+			}
+			if($shortflat == "" && $shortpg == ""){
+				echo "wrong";
+			}
+			else{
+				$this->users->createsitevisit($name,$username,$phone,$pickdate,$picktime,$pickplace,$shortpg,$shortflat);
+				echo "success";
+			}
+		}
+	}
 	function checkuser(){
 		$username = $_POST["username"];
 		$password = $_POST["password"];

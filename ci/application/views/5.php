@@ -3,25 +3,6 @@
 <head>
 <link rel="stylesheet" type="text/css" href="../../static/css/slider.css">
 <script>
-var currentview = "";
-function closecurrent(ids){
-  var state = 0;
-  if(window["currentview"]!=""){
-    var h = "#" + window["currentview"] + "_toggler";
-    if(window["currentview"]!=ids){
-      $(h).toggle("slow", function(){
-          //Animation complete
-      });
-    }
-  }
-  if(window["currentview"] == ids){
-    window["currentview"] = "";
-    state=1;
-  }
-  if(state==0){
-    window["currentview"] = ids;
-  }
-}
 function test1(){
   $(".container2").toggle("fast", function(){
     //Animation complete
@@ -172,7 +153,7 @@ function show(ids){
     <div class="container2" style="float:left;clear:left;display:none;" id="<?php echo $locations[$i]->pid ."_toggler";?>">
         <div id="<?php echo $locations[$i]->pid . "hider"; ?>">
   <div style="float:right;width:44.19%;height:70%;background:black;">
-  <font size="6" color="#11A7F6">
+  <font size="5" color="#11A7F6" style="margin-top:2%;">
   <?php echo $locations[$i]->bhk_type . "BHK FLAT";?> 
   </font>
   <button type="button" id="<?php echo $locations[$i]->pid . "hide";?>" class="btn btn-lg btn-danger" data-container="body" style="float:right;" onclick="hide('<?php echo $locations[$i]->pid;?>')") >Map View</button>
@@ -309,7 +290,7 @@ function show(ids){
   <?php for($j=1;$j<=14;$j++){
     $imageno = "image_" . $j;
     if($locations[$i]->$imageno != ""){?>
-      <li style="width: 700px;"><img src="<?php echo $locations[$i]->$imageno ;?>"></li>
+      <li style="width: 546px;"><img src="<?php echo $locations[$i]->$imageno ;?>"></li>
     <?php }
   }?>
       <li></li>

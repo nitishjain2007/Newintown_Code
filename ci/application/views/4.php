@@ -3,25 +3,6 @@
 <head>
 <link rel="stylesheet" type="text/css" href="../../static/css/slider.css">
 <script>
-var currentview = "";
-function closecurrent(ids){
-	var state = 0;
-	if(window["currentview"]!=""){
-		var h = "#" + window["currentview"] + "_toggler";
-		if(window["currentview"]!=ids){
-			$(h).toggle("slow", function(){
-					//Animation complete
-			});
-		}
-	}
-	if(window["currentview"] == ids){
-		window["currentview"] = "";
-		state=1;
-	}
-	if(state==0){
-		window["currentview"] = ids;
-	}
-}
 function test1(){
 	$(".container2").toggle("fast", function(){
 		//Animation complete
@@ -232,9 +213,9 @@ function show(ids){
 	</td>
 	<td>
 	<?php if($locations[$i]->smoking == "y"){ ?>
-		<font size="2" color="#3C763D" style="font-weight: bold;">Smoking-Drinking : Allowed</font>
+		<font size="2" color="#3C763D" style="font-weight: bold;">Smoking : Allowed</font>
 	<?php }else{?>
-		<font size="2" color="grey">Smoking-Drinking : Not Allowed</font>
+		<font size="2" color="grey">Smoking : Not Allowed</font>
 	<?php } ?>
 	</td>
 	</tr>
@@ -254,10 +235,10 @@ function show(ids){
 	<?php } ?>
 	</td>
 	<td>
-	<?php if($locations[$i]->security == "y"){ ?>
-		<font size="2" color="#3C763D" style="font-weight: bold;">Security</font>
+	<?php if($locations[$i]->drinking == "y"){ ?>
+		<font size="2" color="#3C763D" style="font-weight: bold;">Drinking : Allowed</font>
 	<?php }else{?>
-		<font size="2" color="grey">Security</font>
+		<font size="2" color="grey">Drinking : Not Allowed</font>
 	<?php } ?>
 	</td>
 	</tr>
@@ -270,6 +251,13 @@ function show(ids){
 		<font size="2" color="#3C763D" style="font-weight: bold;">AC</font>
 	<?php }else{?>
 		<font size="2" color="grey">AC</font>
+	<?php } ?>
+	</td>
+	<td>
+	<?php if($locations[$i]->security == "y"){ ?>
+		<font size="2" color="#3C763D" style="font-weight: bold;">Security</font>
+	<?php }else{?>
+		<font size="2" color="grey">Security</font>
 	<?php } ?>
 	</td>
 	</tr>

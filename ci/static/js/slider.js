@@ -141,14 +141,14 @@ function slideTo1(imageToGo1){
 }
 function onClickPrev1(){
 	if(currentImage1== 0){
-		slideTo1(((imageNumber1 - 2)/6 - ((imageNumber1 - 2)/6)%1)*6);
+		slideTo1(((imageNumber1 - 2)/5 - ((imageNumber1 - 2)/5)%1)*5);
 	}
 	else{
-		slideTo1(currentImage1 - 6);
+		slideTo1(currentImage1 - 5);
 	}
 }
 function onClickNext1(){
-	if(currentImage1/6 - (currentImage1/6)%1 == ((imageNumber1 - 2)/6) - ((imageNumber1 - 2)/6)%1){
+	if(currentImage1/5 - (currentImage1/5)%1 == ((imageNumber1 - 2)/5) - ((imageNumber1 - 2)/5)%1){
 		slideTo1(0);
 	}
 	else{
