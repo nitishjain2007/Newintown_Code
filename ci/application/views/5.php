@@ -356,7 +356,7 @@ function show(ids){
   <div style="height:50%;float:left;">
   <div style="width:49%;float:left;">
   <font color="white">
-  <font size="6">
+  <font size="4" style="font-weight:bold;">
   Nearest Markets
   </font>
   <table class="<?php echo $locations[$i]->pid . "table";?>" id="<?php echo "shoppingview" . $locations[$i]->pid;?>">
@@ -373,7 +373,7 @@ function show(ids){
   </div>
   <div style="width:50%;float:left;margin-left:1%;">
   <font color="white">
-  <font size="6">
+  <font size="4" style="font-weight:bold;">
   Nearest ATM's
   </font>
   <table class="<?php echo $locations[$i]->pid . "table";?>" id="<?php echo "atmview" . $locations[$i]->pid;?>">
@@ -392,7 +392,7 @@ function show(ids){
   <div style="height:50%;float:left;">
   <div style="width:49%;float:left;">
   <font color="white">
-  <font size="6">
+  <font size="4" style="font-weight:bold;">
   Nearest Metro's
   </font>
   <table class="<?php echo $locations[$i]->pid . "table";?>" id="<?php echo "metroview" . $locations[$i]->pid;?>">
@@ -409,7 +409,7 @@ function show(ids){
   </div>
   <div style="width:50%;float:left;margin-left:1%;">
   <font color="white">
-  <font size="6">
+  <font size="4" style="font-weight:bold;">
   Nearest Restaurants
   </font>
   <table class="<?php echo $locations[$i]->pid . "table";?>" id="<?php echo "restaurantview" . $locations[$i]->pid;?>">
