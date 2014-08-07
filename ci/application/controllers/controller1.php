@@ -138,7 +138,7 @@ class Controller1 extends CI_Controller{
     		}
     	}
     	else{
-			$sessionname = $_COOKIE['session'];
+			$sessionname = $_POST['usersession'];
 			$this->load->model("users");
 			$f = $this->users->getsessioninfo($sessionname);
 			$short = "";
@@ -198,7 +198,7 @@ class Controller1 extends CI_Controller{
     			echo "failure";
     		}
     		else{
-    			echo "success";
+    			echo $user;
     		}
 		}
 	}

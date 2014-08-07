@@ -246,18 +246,18 @@ window.onload=function(){
     });
 </script>
 <script>
-function viewshort(ids){
+function viewshort(){
     $.ajax({
         type: "POST",
         url: "checkifshort"
     })
         .done(function(value){
-            alert(value);
-            if(value == "success"){
-               window.location = "http://localhost/ci/index.php/controller1/viewshortlist"; 
+            if(value == "failure"){
+               alert("Please Shortlist a Property First"); 
             }
             else{
-                alert("PLease Shortlist a Property First");
+                document.getElementById("usersession").value = value;
+                document.getElementById("viewshortlistform").submit();
             }
         });	 
 }
@@ -442,7 +442,7 @@ function makelinksflat(value){
                 document.getElementById(window["choosen"]).click();
             }
             else{
-                window.location = "http://localhost/ci/index.php/controller1/viewshortlist";
+                viewshort();
             }
     });
 }
@@ -473,7 +473,7 @@ function makelinkspg(value){
                 document.getElementById(window["choosen"]).click();
             }
             else{
-                window.location = "http://localhost/ci/index.php/controller1/viewshortlist";
+                viewshort();
             }
     });
 }
@@ -619,7 +619,7 @@ List your Property
 	        <button type="button" class="btn btn-primary" onclick="giveresultdelay()" style="height: 30px;margin-top:20px;float:left;">Go</button>
     </div>
     <div style="float:left;margin-left:4.5%;">
-        <button type="button" class="btn btn-primary" id="<?php if($log == "loggedin"){echo "shortink";}else{echo "shortout";}?>" onclick="viewshort(this.id)" style="height:50px;margin-top:10px;border-radius:0px;">View Shortlist</button>
+        <button type="button" class="btn btn-primary" id="<?php if($log == "loggedin"){echo "shortink";}else{echo "shortout";}?>" onclick="viewshort()" style="height:50px;margin-top:10px;border-radius:0px;">View Shortlist</button>
     </div>
     <div style="float:left;margin-left:1%" class="btn-toolbar">
     <div class="btn-group">
@@ -781,6 +781,11 @@ $('#timepicker1').timepicker();
 </div>
 <div id="usercontentsform" style="display:none;">
 	<input type="text" <?php if($log == "loggedin"){ ?> value="<?php echo $user; ?>" <?php } ?> id="username">
+</div>
+<div id="viewshortlistformdiv" style="display:none;">
+<form id="viewshortlistform" method="post" action="viewshortlist">
+<input type="text" name="usersession" id="usersession">
+</form>
 </div>
 <div id="logoutform" style="display: none;">
     <form id="logoutformmain" method="post">
