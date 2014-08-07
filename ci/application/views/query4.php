@@ -387,7 +387,7 @@ function changecontent(){
     <?php }else{ ?>
 	var user = "";
     <?php } ?> 
-    $("#div1").load("four?lng=" + lng + "&lat=" + lat + "&gender=" + window["gendertype"] + "&sharing=" + window["sharingtype"] + "&advance=" + window["advance"] + "&logstatus=" + "<?php echo $log; ?>" + "&user=" + user,function(){$('#div2').hide();$('#div1').show();});
+    $("#div1").load("four?lng=" + lng + "&lat=" + lat + "&gender=" + window["gendertype"] + "&sharing=" + window["sharingtype"] + "&advance=" + window["advance"] + "&logstatus=" + "<?php echo $log; ?>" + "&user=" + user,function(){$('#div2').hide();$('#div1').show();getshortlistedpg();getshortlistedflat();});
 }
 </script>
 

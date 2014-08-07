@@ -419,7 +419,7 @@ function changecontent(){
     <?php }else{ ?>
 	var user = "";
     <?php } ?> 
-    $("#div1").load("five?lng=" + lng + "&lat=" + lat + "&furnishing=" + window["furnishingtype"] + "&sharing=" + window["sharingtype"] + "&advance=" + window["advance"] + "&logstatus=" + "<?php echo $log; ?>" + "&user=" + user,function(){$('#div1').show();$('#div2').hide();});
+    $("#div1").load("five?lng=" + lng + "&lat=" + lat + "&furnishing=" + window["furnishingtype"] + "&sharing=" + window["sharingtype"] + "&advance=" + window["advance"] + "&logstatus=" + "<?php echo $log; ?>" + "&user=" + user,function(){$('#div1').show();$('#div2').hide();getshortlistedpg();getshortlistedflat();});
 }
 </script>
 
