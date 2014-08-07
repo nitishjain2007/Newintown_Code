@@ -23,6 +23,7 @@
 <script src="../../bootstrap/js/popover.js"></script>
 <script src="../../bootstrap/js/alert.js"></script>
 <script src="../../bootstrap/js/dropdown.js"></script>
+<script src="../../bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1H88PyXHfW2qihya9R0VwoOF3cKmlSmY&sensor=FALSE&libraries=places">
     </script>
@@ -160,6 +161,7 @@ function removeshort(ids){
                 .done(function(){
 			$(hider1).hide();
 			$(hider2).hide();
+            removelinkspg(ids);
 			window["currentview"] = "";
 		});
 }
@@ -174,8 +176,82 @@ function removeshortflat(ids){
             .done(function(){
                 $(hider1).hide();
                 $(hider2).hide();
+                removelinksflat(ids);
                 window["currentview"] = "";
             });
+}
+function getshortlistedflat(){
+    $.ajax({
+                type: "POST",
+                url: "getcurrentshortlistedflat"
+        })
+                .done(function(value){
+                    var values = value.split(",");
+                    for(i=0;i<values.length;i++){
+                        makelinksflat(values[i]);
+                    }
+                });
+}
+function makelinksflat(value){
+        var li=document.createElement('h5');
+        li.innerHTML = value;
+        li.id = value + "he";
+        ids = '#' + value + "he";
+        $('#shortlistedpropflat').append(li);
+        $(document).on('click', ids, function(){
+            window["choosen"] = li.id.slice(0,-2);
+            var h = document.getElementById(window["choosen"]);
+            if(h != null){
+                alert("hello");
+                document.getElementById(window["choosen"]).click();
+            }
+            else{
+                window.location = "http://localhost/ci/index.php/controller1/viewshortlist";
+            }
+    });
+}
+function getshortlistedpg(){
+    $.ajax({
+                type: "POST",
+                url: "getcurrentshortlistedpg"
+        })
+                .done(function(value){
+                    var values = value.split(",");
+                    for(i=0;i<values.length;i++){
+                        if(values[i]!="false"){
+                            makelinkspg(values[i]);
+                        }
+                    }
+                });
+}
+function makelinkspg(value){
+        var li=document.createElement('h5');
+        li.innerHTML = value;
+        li.id = value + "he";
+        ids = '#' + value + "he";
+        $('#shortlistedproppg').append(li);
+        $(document).on('click', ids, function(){
+            window["choosen"] = li.id.slice(0,-2);
+            var h = document.getElementById(window["choosen"]);
+            if(h != null){
+                document.getElementById(window["choosen"]).click();
+            }
+            else{
+                window.location = "http://localhost/ci/index.php/controller1/viewshortlist";
+            }
+    });
+}
+function removelinkspg(value){
+    var id = value + "he";
+    var li = document.getElementById(id);
+    var parent = document.getElementById("shortlistedproppg");
+    parent.removeChild(li);
+}
+function removelinksflat(value){
+    var id = value + "he";
+    var li = document.getElementById(id);
+    var parent = document.getElementById("shortlistedpropflat");
+    parent.removeChild(li);
 }
 </script>
 <script>
@@ -253,6 +329,10 @@ function removeshortflat(ids){
                         $( "#register" ).dialog( "open" );
                 });
     });
+function closecurrentdiv(ids){
+    //alert("hello");
+    document.getElementById(ids).click();
+}
 </script>
 </head>
 <body>
@@ -288,6 +368,9 @@ function removeshortflat(ids){
         <font size="6" color="#11A7F6">
         <?php echo $locations[$i]->seeking_a; ?> PG
         </font>
+        <div style="float:right;">
+        <img src="../../static/images/close.png" style="float:right;" onclick="closecurrentdiv('<?php echo $locations[$i]->pid; ?>')">
+        </div>
         <button type="button" id="<?php echo $locations[$i]->pid . "hide";?>" class="btn btn-lg btn-danger" data-container="body" style="float:right;" onclick="hide('<?php echo $locations[$i]->pid;?>')") >Map View</button>
         <button type="button" class="btn btn-lg btn-danger" data-container="body" style="float:right;" onclick="removeshort('<?php echo $locations[$i]->pid;?>')") >Remove Shortlist</button>
         <br>
@@ -622,8 +705,11 @@ function removeshortflat(ids){
         <div id="<?php echo $locations1[$i]->pid . "hider"; ?>">
   <div style="float:right;width:44.19%;height:70%;background:black;">
   <font size="5" color="#11A7F6" style="margin-top:2%;">
-  <?php echo $locations[$i]->bhk_type . "BHK FLAT";?> 
+  <?php echo $locations1[$i]->bhk_type . "BHK FLAT";?> 
   </font>
+  <div style="float:right;">
+  <img src="../../static/images/close.png" style="float:right;" onclick="closecurrentdiv('<?php echo $locations1[$i]->pid; ?>')">
+  </div>
   <button type="button" id="<?php echo $locations1[$i]->pid . "hide";?>" class="btn btn-lg btn-danger" data-container="body" style="float:right;" onclick="hide('<?php echo $locations1[$i]->pid;?>')") >Map View</button>
   <button type="button" class="btn btn-lg btn-danger" data-container="body" style="float:right;" onclick="removeshortflat('<?php echo $locations1[$i]->pid;?>')") >Remove Shortlist</button>
   <br>
@@ -965,11 +1051,17 @@ Site Visit Form
 </button>
 <br>
 <br>
-<div id="shortlistedprop" style="margin-left:5%;">
-<h5 style="margin-letf:10px;">Your shortlisted properties</h5>
+<div id="shortlistedprop" style="margin-left:5%;float:left;">
+<h5 >Your shortlisted properties</h5>
+<div id="shortlistedproppg" style="width:50%;float:left;">
+<h4>PG</h4>
+</div>
+<div id="shortlistedpropflat" style="width:50%;float:left;">
+<h4>FLAT</h4>
+</div>
 </div>
 <br>
-<div class="container" id="sitevisitform" title="Sitevisit" style="width:90%;">
+<div class="container" id="sitevisitform" title="Sitevisit" style="width:90%;float:left;margin-left:5%;">
     <div class="row">
         <div id="sitevisitformdiv">
         <form id="sitevisitformmain" method="post" >
@@ -1117,6 +1209,8 @@ $('#timepicker1').timepicker();
 window.onload = function(){
     $('#div2').hide();
     $('#div1').show();
+    getshortlistedpg();
+    getshortlistedflat();
 }
 </script>
 <script type="text/javascript">

@@ -425,7 +425,38 @@ function changecontent(){
 
 <script type="text/javascript" src="../../static/js/slider.js"></script>
 <script>
-function getshortlisted(){
+function getshortlistedpg(){
+    $.ajax({
+                type: "POST",
+                url: "getcurrentshortlistedpg"
+        })
+                .done(function(value){
+                    var values = value.split(",");
+                    for(i=0;i<values.length;i++){
+                        if(values[i]!="false"){
+                            makelinkspg(values[i]);
+                        }
+                    }
+                });
+}
+function makelinkspg(value){
+        var li=document.createElement('h5');
+        li.innerHTML = value;
+        li.id = value + "he";
+        ids = '#' + value + "he";
+        $('#shortlistedproppg').append(li);
+        $(document).on('click', ids, function(){
+            window["choosen"] = li.id.slice(0,-2);
+            var h = document.getElementById(window["choosen"]);
+            if(h != null){
+                document.getElementById(window["choosen"]).click();
+            }
+            else{
+                window.location = "http://localhost/ci/index.php/controller1/viewshortlist";
+            }
+    });
+}
+function getshortlistedflat(){
     $.ajax({
                 type: "POST",
                 url: "getcurrentshortlistedflat"
@@ -433,27 +464,32 @@ function getshortlisted(){
                 .done(function(value){
                     var values = value.split(",");
                     for(i=0;i<values.length;i++){
-                        makelinks(values[i]);
+                        makelinksflat(values[i]);
                     }
                 });
 }
-function makelinks(value){
+function makelinksflat(value){
         var li=document.createElement('h5');
         li.innerHTML = value;
         li.id = value + "he";
         ids = '#' + value + "he";
-        $('#shortlistedprop').append(li);
+        $('#shortlistedpropflat').append(li);
         $(document).on('click', ids, function(){
             window["choosen"] = li.id.slice(0,-2);
             var h = document.getElementById(window["choosen"]);
             if(h != null){
-                alert("hello");
                 document.getElementById(window["choosen"]).click();
             }
             else{
                 window.location = "http://localhost/ci/index.php/controller1/viewshortlist";
             }
     });
+}
+function removelinksflat(value){
+    var id = value + "he";
+    var li = document.getElementById(id);
+    var parent = document.getElementById("shortlistedpropflat");
+    parent.removeChild(li);
 }
 $(document).ready(function(){
   $(document).on("click","#button2", function(){
@@ -465,7 +501,7 @@ $(document).ready(function(){
         var user = "";
     <?php } ?> 
 
-    $("#div1").load("five?lng=" + lng + "&lat=" + lat + "&furnishing=all&sharing=all&adavance=" + window["advance"] + "&logstatus=" + "<?php echo $log; ?>" + "&user=" + user,function(){$('#div1').show();$('#div2').hide();getshortlisted();});
+    $("#div1").load("five?lng=" + lng + "&lat=" + lat + "&furnishing=all&sharing=all&adavance=" + window["advance"] + "&logstatus=" + "<?php echo $log; ?>" + "&user=" + user,function(){$('#div1').show();$('#div2').hide();getshortlistedpg();getshortlistedflat();});
   });
 });
 </script>
@@ -638,11 +674,17 @@ Site Visit Form
 </button>
 <br>
 <br>
-<div id="shortlistedprop" style="margin-left:5%;">
-<h5 style="margin-letf:10px;">Your shortlisted properties</h5>
+<div id="shortlistedprop" style="margin-left:5%;float:left;">
+<h5 >Your shortlisted properties</h5>
+<div id="shortlistedproppg" style="width:50%;float:left;">
+<h4>PG</h4>
+</div>
+<div id="shortlistedpropflat" style="width:50%;float:left;">
+<h4>FLAT</h4>
+</div>
 </div>
 <br>
-<div class="container" id="sitevisitform" title="Sitevisit" style="width:90%;">
+<div class="container" id="sitevisitform" title="Sitevisit" style="width:90%;float:left;margin-left:5%;">
     <div class="row">
         <div id="sitevisitformdiv">
         <form id="sitevisitformmain" method="post" >

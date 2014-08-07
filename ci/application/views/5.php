@@ -25,7 +25,8 @@ function removeshort1(ids){
         elements[i].innerHTML = "Shortlist";
       }
       var j = "#" + ids + "he";
-      $(j).hide(); 
+      $(j).hide();
+      removelinksflat(ids); 
     });
 }
 function addshort1(ids){
@@ -45,7 +46,7 @@ function addshort1(ids){
         for(i=0;i<elements.length;i++){
           elements[i].innerHTML = "Remove Shortlist";
         }
-        makelinks(ids);
+        makelinksflat(ids);
       }
       else{
         alert("You Can Shortlist max 6 Properties");
@@ -146,6 +147,10 @@ function show(ids){
   $(g).hide();
   $(h).show();
 }
+function closecurrentdiv(ids){
+  //alert("hello");
+  document.getElementById(ids).click();
+}
 </script>
 </head>
 <body>
@@ -158,6 +163,9 @@ function show(ids){
   <font size="5" color="#11A7F6" style="margin-top:2%;">
   <?php echo $locations[$i]->bhk_type . "BHK FLAT";?> 
   </font>
+  <div style="float:right;">
+  <img src="../../static/images/close.png" style="float:right;" onclick="closecurrentdiv('<?php echo $locations[$i]->pid; ?>')">
+  </div>
   <button type="button" id="<?php echo $locations[$i]->pid . "hide";?>" class="btn btn-lg btn-danger" data-container="body" style="float:right;" onclick="hide('<?php echo $locations[$i]->pid;?>')") >Map View</button>
   <button type="button" onclick="fun('<?php echo $locations[$i]->pid; ?>')" class="btn btn-lg btn-danger <?php echo $locations[$i]->pid . "shorter"; ?>" data-container="body" style="float:right;" data-toggle="popover" title="Login" data-placement="bottom" ><?php if($locations[$i]->short == "no"){ ?>Shortlist<?php }else{ ?>Remove Shortlist<?php } ?></button>
   <br>

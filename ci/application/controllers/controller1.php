@@ -193,9 +193,9 @@ class Controller1 extends CI_Controller{
 			echo "failure";
 		}
 		else{
-			$user = $_COOKIE['newuser'];
+			$user = $_COOKIE['session'];
     		$this->load->model("users");
-    		$f = $this->users->retrievedata($user);
+    		$f = $this->users->getsessioninfo($user);
     		foreach($f->result() as $i){
     			$userdata = $i;
     		}

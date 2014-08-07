@@ -80,6 +80,10 @@ function show(ids){
         $(g).hide();
         $(h).show();
 }
+function closecurrentdiv(ids){
+    //alert("hello");
+    document.getElementById(ids).click();
+}
 </script>
 </head>
 <body>
@@ -101,6 +105,9 @@ function show(ids){
         <font size="6" color="#11A7F6">
         <?php echo $locations[$i]->seeking_a; ?> PG
         </font>
+        <div style="float:right;">
+        <img src="../../static/images/close.png" style="float:right;" onclick="closecurrentdiv('<?php echo $locations[$i]->pid; ?>')">
+        </div>
         <button type="button" id="<?php echo $locations[$i]->pid . "hide";?>" class="btn btn-lg btn-danger" data-container="body" style="float:right;" onclick="hide('<?php echo $locations[$i]->pid;?>')") >Map View</button>
         <br>
         <br>
@@ -352,6 +359,9 @@ function show(ids){
   <font size="5" color="#11A7F6" style="margin-top:2%;">
   <?php echo $locations[$i]->bhk_type . "BHK FLAT";?> 
   </font>
+  <div style="float:right;">
+  <img src="../../static/images/close.png" style="float:right;" onclick="closecurrentdiv('<?php echo $locations1[$i]->pid; ?>')">
+  </div>
   <button type="button" id="<?php echo $locations1[$i]->pid . "hide";?>" class="btn btn-lg btn-danger" data-container="body" style="float:right;" onclick="hide('<?php echo $locations1[$i]->pid;?>')") >Map View</button>
   <br>
   <br>
