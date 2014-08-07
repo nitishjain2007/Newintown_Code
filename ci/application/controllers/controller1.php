@@ -138,10 +138,6 @@ class Controller1 extends CI_Controller{
     		}
     	}
     	else{
-		if(!$this->input->cookie('session')){
-			$this->load->view('viewshortnone');
-		}
-		else{
 			$sessionname = $_COOKIE['session'];
 			$this->load->model("users");
 			$f = $this->users->getsessioninfo($sessionname);
@@ -185,7 +181,6 @@ class Controller1 extends CI_Controller{
 			$data = array("locations" => $list,"locations1" => $list1,"log"=>"loggedout","user"=>"");
 			$this->load->view("shortlist",$data);	
 			}
-		}
 	}
 	}
 	function checkifshort(){
@@ -432,7 +427,7 @@ class Controller1 extends CI_Controller{
 		$this->load->view("yourshortlisted",$data);
 	}
 	function getcurrentshortlistedflat(){
-		if($_COOKIE['session']){
+		if(isset($_COOKIE['session'])){
 			$this->load->model('users');
 			$f = $this->users->getsessioninfo($_COOKIE["session"]);
 			foreach($f->result() as $i){

@@ -422,7 +422,9 @@ function getshortlistedflat(){
                 .done(function(value){
                     var values = value.split(",");
                     for(i=0;i<values.length;i++){
-                        makelinksflat(values[i]);
+                        if(values[i]!="false"){
+                            makelinksflat(values[i]);
+                        }
                     }
                 });
 }
