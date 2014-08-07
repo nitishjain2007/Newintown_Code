@@ -297,7 +297,18 @@ function closecurrent(ids){
   }
 }
 function viewshort(ids){
-	window.location = "http://localhost/ci/index.php/controller1/viewshortlist"; 
+    $.ajax({
+        type: "POST",
+        url: "checkifshort"
+    })
+        .done(function(value){
+            if(value == "success"){
+               window.location = "http://localhost/ci/index.php/controller1/viewshortlist"; 
+            }
+            else{
+                alert("PLease Shortlist a Property First");
+            }
+        });  
 }
 function checkshort(){
 	var user = document.getElementById("shortusernamevar").value;

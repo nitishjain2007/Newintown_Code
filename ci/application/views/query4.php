@@ -247,7 +247,18 @@ window.onload=function(){
 </script>
 <script>
 function viewshort(ids){
-	window.location = "http://localhost/ci/index.php/controller1/viewshortlist"; 
+    $.ajax({
+        type: "POST",
+        url: "checkifshort"
+    })
+        .done(function(value){
+            if(value == "success"){
+               window.location = "http://localhost/ci/index.php/controller1/viewshortlist"; 
+            }
+            else{
+                alert("PLease Shortlist a Property First");
+            }
+        });	 
 }
 function changetoflat(){
     var lng = '<?php echo $lng; ?>';
@@ -410,7 +421,9 @@ function getshortlisted(){
                 .done(function(value){
                     var values = value.split(",");
                     for(i=0;i<values.length;i++){
-                        makelinks(values[i]);
+                        if(values[i]!="false"){
+                            makelinks(values[i]);
+                        }
                     }
                 });
 }
@@ -489,11 +502,11 @@ function test(){
 List your Property
 </button>                               
 <?php if($log == "loggedout" || $log == "wrong"){ ?>
-<button type="button" id="loginpopup" class="btn btn-lg btn-danger" data-container="body" data-toggle="popover" title="Login" data-placement="bottom" >
+<button type="button" id="loginpopup" class="btn btn-lg btn-danger" data-container="body" data-toggle="popover" title="Login" data-placement="bottom" style="display:none;" >
   Login
 </button>
 <?php }else{?>
-<button type="button" id="logoutpopup" class="btn btn-lg btn-danger" data-container="body" data-toggle="popover" title="Logout" data-placement="bottom" style = "border-radius: 0px;height:65px;width:100px;" onclick="logout()" >
+<button type="button" id="logoutpopup" class="btn btn-lg btn-danger" data-container="body" data-toggle="popover" title="Logout" data-placement="bottom" style = "border-radius: 0px;height:65px;width:100px;display:none;" onclick="logout()" >
   Logout
 </button>
 <?php }?>

@@ -152,7 +152,7 @@ function onClickNext1(){
 		slideTo1(0);
 	}
 	else{
-		slideTo1(currentImage1 + 6);
+		slideTo1(currentImage1 + 5);
 	}
 }
 function generatePager(imageNumber){

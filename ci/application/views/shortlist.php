@@ -81,28 +81,29 @@ function logout(){
         		window.location="http://newintown.in/ci/index.php/controller1/main";	
                 });
 }
-function requestsite(){
-    var username = document.getElementById("username").value;
-    var password = document.getElementById("password").value;
-    alert(username);
-    alert(password);
+function makesitevisit(){
+    var username = document.getElementById("username5").value;
+    var name = document.getElementById("name5").value;
+    var phone = document.getElementById("phoneno5").value;
+    var pickdate = document.getElementById("datepicker1").value;
+    var picktime = document.getElementById("timepicker1").value;
+    var pickplace = document.getElementById("pickpoint5").value;
     $.ajax({
-        type: "POST",
-        url: "checkuser1",
-        data: {username: username,password: password}
-    })
-        .done(function(value){
-        if(value == "success"){
-            $("#loginform").dialog('close');
-            alert("We will call you shortly for more details.");
-        }
-        else if(value == "alreadysitevisit"){
-            alert("You can't have more sitevisits");
-        }
-        else{
-            alert("Credentials provided are not authentic");
-        }
-        });
+                type: "POST",
+                url: "makesitevisit",
+                data: {username: username,name: name,phone: phone,pickdate: pickdate,picktime: picktime,pickplace: pickplace}
+        })
+                .done(function(value){
+                    if(value == "failure"){
+                        alert("Already registered for Site Visit");
+                    }
+                    else if(value == "wrong"){
+                        alert("Please Shortlist first");
+                    }
+                    else{
+                        alert("Registered for Site Visit");
+                    }
+                });
 }
 function createuser(){
     $("#register").dialog('close');
@@ -266,25 +267,14 @@ function removeshortflat(ids){
 <?php }?>
 <div id="logindiv" style="float: right;">
 <font color="white">
-<button type="button" id="logoutpopup" class="btn btn-lg btn-danger" data-container="body" data-toggle="popover" title="Logout" data-placement="bottom" style = "border-radius: 0px;height:65px;width:100px;" onclick="logout()" >
+<button type="button" id="logoutpopup" class="btn btn-lg btn-danger" data-container="body" data-toggle="popover" title="Logout" data-placement="bottom" style = "border-radius: 0px;height:65px;width:100px;display:none;" onclick="logout()" >
   Logout 
 </button>
 </font>
 </div>
-<div id="plk" style="background-color: #EFEFF2;height: 70px;width:100%;margin-top:0.86%;">
-    <div style="left: 0;float:left;">
-        <button type="button" class="btn btn-primary" id="sitevisitpopup" style="height:50px;margin-top:10px;border-radius:0px;">Request for Site Visit</button>
-    </div>
 </div>
-</div>
-<div id="container1">
-<div id="content1">
-<div id="logsearch">
-<?php if($log == "loggedin"){
-    echo "Your shortlist history";
-}
-?>
-</div>
+<div id="container2">
+<div id="content1" style="width:82%;float:left;">
 <div id="div2" style="display:none;">
 <img style="display:block;margin-left:auto;margin-right:auto;height:150px;width:150px;margin-top:15%;" src="../../static/images/loader.gif">
 </div>
@@ -303,242 +293,325 @@ function removeshortflat(ids){
         <br>
         <br>
         <font size="3" color="white">Nearest Landmark - <?php echo $locations[$i]->nearest_landmark; ?></font>
-        <br>
-        <font size="3" color="white"><?php echo ucwords($locations[$i]->sharing_type); ?> Sharing | Attached Bathroom | <?php if($locations[$i]->ac == "y"){ echo "AC";}elseif($locations[$i]->ac == "cooler"){ echo "Cooler";}?></font>
-        <br>
-        <br>
-        <font size="4" color="white">Rent : Rs <?php echo $locations[$i]->rent; ?> | Security Deposit : Rs <?php echo $locations[$i]->security_deposit; ?>
-        </font>
-        <br>
-        <br>
-        <font size="3" color="white">Meals : <?php echo $locations[$i]->food; ?></font>
-        <br>
-        <font size="3" color="white">Electricity : <?php echo $locations[$i]->electricity; ?></font>
-        <br>
-        <br>
-        <div class="contents1">
-        <table>
-        <tr>
-        <td>
-        <font size="2" color="#3C763D" style="font-weight: bold;">Power-Backup:
-        <?php echo $locations[$i]->power_backup; ?>
-        </font>
-        </td>
-        <td>
-        <?php if($locations[$i]->wifi == "y"){ ?>
-                <font size="2" color="#3C763D" style="font-weight: bold;">WiFi</font>
-        <?php }else{?>
-                <font size="2" color="grey">WiFi</font>
-        <?php } ?>
-        </td>
-        <td>
-        <?php if($locations[$i]->parking == "y"){ ?>
-                <font size="2" color="#3C763D" style="font-weight: bold;">Parking</font>
-        <?php }else{?>
-                <font size="2" color="grey">Parking</font>
-        <?php } ?>
-        </td>
-        </tr>
-        <tr>
-        <td>
-        <?php if($locations[$i]->gas_stove == "y"){ ?>
-                <font size="2" color="#3C763D" style="font-weight: bold;">Gas Stove</font>
-        <?php }else{?>
-                <font size="2" color="grey">Gas Stove</font>
-        <?php } ?>
-        </td>
-        <td>
-        <?php if($locations[$i]->fridge == "y"){ ?>
-                <font size="2" color="#3C763D" style="font-weight: bold;">Fridge</font>
-        <?php }else{?>
-                <font size="2" color="grey">Fridge</font>
-        <?php } ?>
-        </td>
-        <td>
-        <?php if($locations[$i]->smoking == "y"){ ?>
-                <font size="2" color="#3C763D" style="font-weight: bold;">Smoking-Drinking : Allowed</font>
-        <?php }else{?>
-                <font size="2" color="grey">Smoking-Drinking : Not Allowed</font>
-        <?php } ?>
-        </td>
-        </tr>
-        <tr>
-        <td>
-        <?php if($locations[$i]->geyser == "y"){ ?>
-                <font size="2" color="#3C763D" style="font-weight: bold;">Geyser</font>
-        <?php }else{?>
-                <font size="2" color="grey">Geyser</font>
-        <?php } ?>
-        </td>
-        <td>
-        <?php if($locations[$i]->washing_machine == "y"){ ?>
-                <font size="2" color="#3C763D" style="font-weight: bold;">Washing Machine</font>
-        <?php }else{?>
-                <font size="2" color="grey">Washing Machine</font>
-        <?php } ?>
-        </td>
-        <td>
-        <?php if($locations[$i]->security == "y"){ ?>
-                <font size="2" color="#3C763D" style="font-weight: bold;">Security</font>
-        <?php }else{?>
-                <font size="2" color="grey">Security</font>
-        <?php } ?>
-        </td>
-        </tr>
-        <tr>
-        <td>
-                <font size="2" color="#3C763D" style="font-weight: bold;">Bathroom : Common</font>
-        </td>
-        <td>
-        <?php if($locations[$i]->ac == "y"){ ?>
-                <font size="2" color="#3C763D" style="font-weight: bold;">AC</font>
-        <?php }else{?>
-                <font size="2" color="grey">AC</font>
-        <?php } ?>
-        </td>
-        </tr>
-        <tr>
-        <td>
-        <?php if($locations[$i]->cupboard == "y"){ ?>
-                <font size="2" color="#3C763D" style="font-weight: bold;">Cupboard</font>
-        <?php }else{?>
-                <font size="2" color="grey">Cupboard</font>
-        <?php } ?>
-        </td>
-        <td>
-                <font size="2" color="#3C763D" style="font-weight: bold;">Food-Habits : <?php echo $locations[$i]->foodhabits; ?></font>
-        </td>
-        </tr>
-        </table>
-        </div>
-        </div>
-        <div class="wrapper">
-        <div class="slide_wrapper">
-        <ul class="image_slide" id="<?php echo $locations[$i]->pid . "_slider" ; ?>">
-        <?php for($j=1;$j<=14;$j++){
-                $imageno = "image_" . $j;
-                if($locations[$i]->$imageno != ""){?>
-                        <li style="width: 700px;"><img src="<?php echo $locations[$i]->$imageno ;?>"></li>
-                <?php }
-        }?>
+    <br>
+    <font size="3" color="white"><?php echo ucwords($locations[$i]->sharing_type); ?> Sharing | Attached Bathroom | <?php if($locations[$i]->ac == "y"){ echo "AC";}elseif($locations[$i]->ac == "cooler"){ echo "Cooler";}?></font>
+    <br>
+    <br>
+    <font size="4" color="white">Rent : Rs <?php echo $locations[$i]->rent; ?> | Security Deposit : Rs <?php echo $locations[$i]->security_deposit; ?>
+    </font>
+    <br>
+    <br>
+    <font size="3" color="white">Meals : <?php echo $locations[$i]->food; ?></font>
+    <br>
+    <font size="3" color="white">Electricity : <?php echo $locations[$i]->electricity; ?></font>
+    <br>
+    <br>
+    <div class="contents1">
+    <table>
+    <tr>
+    <td>
+    <font size="2" color="#3C763D" style="font-weight: bold;">Power-Backup:
+    <?php echo $locations[$i]->power_backup; ?>
+    </font>
+    </td>
+    <td>
+    <?php if($locations[$i]->wifi == "y"){ ?>
+        <font size="2" color="#3C763D" style="font-weight: bold;">WiFi</font>
+    <?php }else{?>
+        <font size="2" color="grey">WiFi</font>
+    <?php } ?>
+    </td>
+    <td>
+    <?php if($locations[$i]->parking == "y"){ ?>
+        <font size="2" color="#3C763D" style="font-weight: bold;">Parking</font>
+    <?php }else{?>
+        <font size="2" color="grey">Parking</font>
+    <?php } ?>
+    </td>
+    </tr>
+    <tr>
+    <td>
+    <?php if($locations[$i]->gas_stove == "y"){ ?>
+        <font size="2" color="#3C763D" style="font-weight: bold;">Gas Stove</font>
+    <?php }else{?>
+        <font size="2" color="grey">Gas Stove</font>
+    <?php } ?>
+    </td>
+    <td>
+    <?php if($locations[$i]->fridge == "y"){ ?>
+        <font size="2" color="#3C763D" style="font-weight: bold;">Fridge</font>
+    <?php }else{?>
+        <font size="2" color="grey">Fridge</font>
+    <?php } ?>
+    </td>
+    <td>
+    <?php if($locations[$i]->smoking == "y"){ ?>
+        <font size="2" color="#3C763D" style="font-weight: bold;">Smoking : Allowed</font>
+    <?php }else{?>
+        <font size="2" color="grey">Smoking : Not Allowed</font>
+    <?php } ?>
+    </td>
+    </tr>
+    <tr>
+    <td>
+    <?php if($locations[$i]->geyser == "y"){ ?>
+        <font size="2" color="#3C763D" style="font-weight: bold;">Geyser</font>
+    <?php }else{?>
+        <font size="2" color="grey">Geyser</font>
+    <?php } ?>
+    </td>
+    <td>
+    <?php if($locations[$i]->washing_machine == "y"){ ?>
+        <font size="2" color="#3C763D" style="font-weight: bold;">Washing Machine</font>
+    <?php }else{?>
+        <font size="2" color="grey">Washing Machine</font>
+    <?php } ?>
+    </td>
+    <td>
+    <?php if($locations[$i]->drinking == "y"){ ?>
+        <font size="2" color="#3C763D" style="font-weight: bold;">Drinking : Allowed</font>
+    <?php }else{?>
+        <font size="2" color="grey">Drinking : Not Allowed</font>
+    <?php } ?>
+    </td>
+    </tr>
+    <tr>
+    <td>
+        <font size="2" color="#3C763D" style="font-weight: bold;">Bathroom : Common</font>
+    </td>
+    <td>
+    <?php if($locations[$i]->ac == "y"){ ?>
+        <font size="2" color="#3C763D" style="font-weight: bold;">AC</font>
+    <?php }else{?>
+        <font size="2" color="grey">AC</font>
+    <?php } ?>
+    </td>
+    <td>
+    <?php if($locations[$i]->security == "y"){ ?>
+        <font size="2" color="#3C763D" style="font-weight: bold;">Security</font>
+    <?php }else{?>
+        <font size="2" color="grey">Security</font>
+    <?php } ?>
+    </td>
+    </tr>
+    <tr>
+    <td>
+    <?php if($locations[$i]->cupboard == "y"){ ?>
+        <font size="2" color="#3C763D" style="font-weight: bold;">Cupboard</font>
+    <?php }else{?>
+        <font size="2" color="grey">Cupboard</font>
+    <?php } ?>
+    </td>
+    <td>
+        <font size="2" color="#3C763D" style="font-weight: bold;">Food-Habits : <?php echo $locations[$i]->foodhabits; ?></font>
+    </td>
+    </tr>
+    </table>
+    </div>
+    </div>
+    <div class="wrapper">
+    <div class="slide_wrapper">
+    <ul class="image_slide" id="<?php echo $locations[$i]->pid . "_slider" ; ?>">
+    <?php for($j=1;$j<=14;$j++){
+        $imageno = "image_" . $j;
+        if($locations[$i]->$imageno != ""){?>
+            <li style="width: 700px;"><img src="<?php echo $locations[$i]->$imageno ;?>"></li>
+        <?php }
+    }?>
         <li></li>
-        </ul>
-        <span class="nvgt" style="background: #000 url('https://dl.dropboxusercontent.com/u/65639888/image/prev.png') no-repeat center;left: 0px;" onclick="onClickPrev()"></span>
-        <span class="nvgt" style="background: #000 url('https://dl.dropboxusercontent.com/u/65639888/image/next.png') no-repeat center;right: 0px;" onclick="onClickNext()"></span>
-        </div>
-        </div>
-        <div class="slide_wrapper1">
-        <ul id="<?php echo $locations[$i]->pid . "_pager"; ?>" class="pager1">
-        <table>
-        <tr>
-        <?php for($j=1;$j<=14;$j++){
-                $imageno = "image_" . $j;
-                if($locations[$i]->$imageno != ""){?>
-                        <td>
-                        <li style="width:140px;"><img src="<?php echo $locations[$i]->$imageno;?>" onclick="slideTo(<?php echo $j-1;?>)"></li>
-                        </td>
-                <?php }
-        }?>
-        </tr>
-        </table>
-        </ul>
-        <span class="nvgt1" style="background: #000 url('https://dl.dropboxusercontent.com/u/65639888/image/prev.png') no-repeat center; left:0px;" onclick="onClickPrev1()"></span>
-        <span class="nvgt1" style="background: #000 url('https://dl.dropboxusercontent.com/u/65639888/image/next.png') no-repeat center; right:0px;" onclick="onClickNext1()"></span>
-        </div>
-        </div>
-        <div id="<?php echo $locations[$i]->pid . "hidermap";?>" style="display:none;">
-        <input type="text" value="<?php echo $locations[$i]->lati; ?>" id="<?php echo $locations[$i]->pid . "latitude"; ?>" style="display:none;"/>
-        <input type="text" value="<?php echo $locations[$i]->longi; ?>" id="<?php echo $locations[$i]->pid . "longitude"; ?>" style="display:none;"/>
-        <div style="width:50%;height:550px;float:left;border:5px solid white;" id="<?php echo $locations[$i]->pid . "map";?>">
-        </div>
-        <button type="button" id="<?php echo $locations[$i]->pid . "hide";?>" class="btn btn-lg btn-danger" data-container="body" style="float:right;" onclick="show('<?php echo $locations[$i]->pid;?>')") >
-        Grid View
-        </button>
-        <button type="button" class="btn btn-lg btn-danger" data-container="body" style="float:right;" onclick="removeshort('<?php echo $locations[$i]->pid;?>')") >Remove Shortlist</button>
-        <br>
-        <br>
-        <div style="width:48%;float:left;margin-left:1%;">
-        <div style="height:50%;">
-        <div style="width:49%;float:left;">
-        <font color="white">
-        <font size="6">
-        Nearest Markets
-        </font>
-        <table class="<?php echo $locations[$i]->pid . "table";?>" id="<?php echo "shoppingview" . $locations[$i]->pid;?>">
-        <tr>
-        <td style="font-weight:bold;">
-        Place
-        </td>
-        <td style="font-weight:bold;">
-        Distance
-        </td>
-        </tr>
-        </table>
-        </font>
-        </div>
-        <div style="width:50%;float:left;margin-left:1%;">
-        <font color="white">
-        <font size="6">
-        Nearest ATM's
-        </font>
-        <table class="<?php echo $locations[$i]->pid . "table";?>" id="<?php echo "atmview" . $locations[$i]->pid;?>">
-        <tr>
-        <td style="font-weight:bold;">
-        Place
-        </td>
-        <td style="font-weight:bold;">
-        Distance
-        </td>
-        </tr>
-        </table>
-        </font>
-        </div>
-        </div>
-        <div style="height:50%;">
-        <div style="width:49%;float:left;">
-        <font color="white">
-        <font size="6">
-        Nearest Metro's
-        </font>
-        <table class="<?php echo $locations[$i]->pid . "table";?>" id="<?php echo "metroview" . $locations[$i]->pid;?>">
+    </ul>
+    <span class="nvgt" style="background: #000 url('https://dl.dropboxusercontent.com/u/65639888/image/prev.png') no-repeat center;left: 0px;" onclick="onClickPrev()"></span>
+    <span class="nvgt" style="background: #000 url('https://dl.dropboxusercontent.com/u/65639888/image/next.png') no-repeat center;right: 0px;" onclick="onClickNext()"></span>
+    </div>
+    </div>
+    <div class="slide_wrapper1">
+    <ul id="<?php echo $locations[$i]->pid . "_pager"; ?>" class="pager1">
+    <table>
+    <tr>
+    <?php for($j=1;$j<=14;$j++){
+        $imageno = "image_" . $j;
+        if($locations[$i]->$imageno != ""){?>
+            <td>
+            <li style="width:140px;"><img src="<?php echo $locations[$i]->$imageno;?>" onclick="slideTo(<?php echo $j-1;?>)"></li>
+            </td>
+        <?php }
+    }?>
+    </tr>
+    </table>
+    </ul>
+    <span class="nvgt1" style="background: #000 url('https://dl.dropboxusercontent.com/u/65639888/image/prev.png') no-repeat center; left:0px;" onclick="onClickPrev1()"></span>
+    <span class="nvgt1" style="background: #000 url('https://dl.dropboxusercontent.com/u/65639888/image/next.png') no-repeat center; right:0px;" onclick="onClickNext1()"></span>
+    </div>
+    </div>
+    <div id="<?php echo $locations[$i]->pid . "hidermap";?>" style="display:none;">
+    <input type="text" value="<?php echo $locations[$i]->lati; ?>" id="<?php echo $locations[$i]->pid . "latitude"; ?>" style="display:none;"/>
+    <input type="text" value="<?php echo $locations[$i]->longi; ?>" id="<?php echo $locations[$i]->pid . "longitude"; ?>" style="display:none;"/>
+    <div style="width:50%;height:550px;float:left;border:5px solid white;" id="<?php echo $locations[$i]->pid . "map";?>">
+    </div>
+    <button type="button" id="<?php echo $locations[$i]->pid . "hide";?>" class="btn btn-lg btn-danger" data-container="body" style="float:right;" onclick="show('<?php echo $locations[$i]->pid;?>')") >
+    Grid View
+    </button>
+    <button type="button" class="btn btn-lg btn-danger" data-container="body" style="float:right;" onclick="removeshort('<?php echo $locations[$i]->pid;?>')") >Remove Shortlist</button>
+    <br>
+    <br>
+    <div style="width:48%;float:left;margin-left:1%;">
+    <div style="height:50%;float:left;">
+    <div style="width:49%;float:left;">
+    <font color="white">
+    <font size="4" style="font-weight:bold;">
+    Nearest Markets
+    </font>
+    <table class="<?php echo $locations[$i]->pid . "table";?>" id="<?php echo "shoppingview" . $locations[$i]->pid;?>">
+    <tr>
+    <td style="font-weight:bold;">
+    Place
+    </td>
+    <td style="font-weight:bold;">
+    Distance
+    </td>
+    </tr>
+    </table>
+    </font>
+    </div>
+    <div style="width:50%;float:left;margin-left:1%;">
+    <font color="white">
+    <font size="4" style="font-weight:bold;">
+    Nearest ATM's
+    </font>
+    <table class="<?php echo $locations[$i]->pid . "table";?>" id="<?php echo "atmview" . $locations[$i]->pid;?>">
         <tr>
         <td style="font-weight:bold;">
-        Place
-        </td>
-        <td style="font-weight:bold;">
-        Distance
-        </td>
-        </tr>
-        </table>
-        </font>
-        </div>
-        <div style="width:50%;float:left;margin-left:1%;">
-        <font color="white">
-        <font size="6">
-        Nearest Restaurants
-        </font>
-        <table class="<?php echo $locations[$i]->pid . "table";?>" id="<?php echo "restaurantview" . $locations[$i]->pid;?>">
-        <tr>
-        <td style="font-weight:bold;">
-        Place
-        </td>
-        <td style="font-weight:bold;">
-        Distance
-        </td>
-        </tr>
-        </table>
-        </font>
-        </div>
-        </div>
-        </div>
-        </div>
+    Place
+    </td>
+    <td style="font-weight:bold;">
+    Distance
+    </td>
+    </tr>
+    </table>
+    </font>
+    </div>
+    </div>
+    <div style="height:50%;float:left;">
+    <div style="width:49%;float:left;">
+    <font color="white">
+    <font size="4" style="font-weight:bold;">
+    Nearest Metro's
+    </font>
+    <table class="<?php echo $locations[$i]->pid . "table";?>" id="<?php echo "metroview" . $locations[$i]->pid;?>">
+    <tr>
+    <td style="font-weight:bold;">
+    Place
+    </td>
+    <td style="font-weight:bold;">
+    Distance
+    </td>
+    </tr>
+    </table>
+    </font>
+    </div>
+    <div style="width:50%;float:left;margin-left:1%;">
+    <font color="white">
+    <font size="4" style="font-weight:bold;">
+    Nearest Restaurants
+    </font>
+    <table class="<?php echo $locations[$i]->pid . "table";?>" id="<?php echo "restaurantview" . $locations[$i]->pid;?>">
+    <tr>
+    <td style="font-weight:bold;">
+    Place
+    </td>
+    <td style="font-weight:bold;">
+    Distance
+    </td>
+    </tr>
+    </table>
+    </font>
+    </div>
+    </div>
+    </div>
+    </div>
     </div>
     <script>
-        $("<?php echo "#" . $locations[$i]->pid; ?>").click(function() {
-                $("<?php echo "#" . $locations[$i]->pid . "_toggler"; ?>").toggle("slow", function(){
-                        //Animation complete
-                });
+    $(function() {
+        var name = $( "#name" ),
+    email = $( "#email" ),
+    password = $( "#password" ),
+    allFields = $( [] ).add( name ).add( email ).add( password ),
+    tips = $( ".validateTips" );
+
+    function updateTips( t ) {
+        tips
+                .text( t )
+        .addClass( "ui-state-highlight" );
+        setTimeout(function() {
+        tips.removeClass( "ui-state-highlight", 1500 );
+        }, 500 );
+    }
+    $( "<?php echo "#" . $locations[$i]->pid . "form";?>").dialog({
+            autoOpen: false,
+        height: 350,
+        width: 400,
+        modal: true,
+            buttons: {
+        Cancel: function() {
+            $( this ).dialog( "close" );
+        }
+            },
+            close: function() {
+                allFields.val( "" ).removeClass( "ui-state-error" );
+        }
+    });
+
+        $( "<?php echo "#" . $locations[$i]->pid . "popup" ;?>")
+        .button()
+        .click(function() {
+            $( "<?php echo "#" . $locations[$i]->pid . "form" ;?>" ).dialog( "open" );
         });
+    });
+    </script>
+    <script>
+    $(function() {
+        var name = $( "#name" ),
+        email = $( "#email" ),
+        password = $( "#password" ),
+        allFields = $( [] ).add( name ).add( email ).add( password ),
+        tips = $( ".validateTips" );
+
+        function updateTips( t ) {
+            tips
+                .text( t )
+                .addClass( "ui-state-highlight" );
+            setTimeout(function() {
+                tips.removeClass( "ui-state-highlight", 1500 );
+            }, 500 );
+        }
+        $( "<?php echo "#" . $locations[$i]->pid . "form";?>").dialog({
+            autoOpen: false, 
+            height: 350, 
+            width: 400,
+            modal: true,
+            buttons: {
+                Cancel: function() {
+                        $( this ).dialog( "close" );
+                }
+            },
+            close: function() {
+                allFields.val( "" ).removeClass( "ui-state-error" );
+            }
+        });
+
+        $( "<?php echo "#" . $locations[$i]->pid . "popupd" ;?>")
+                .button()
+                .click(function() {
+                        $( "<?php echo "#" . $locations[$i]->pid . "form" ;?>" ).dialog( "open" );
+                });
+    });
+    </script>
+    <script>
+    $("<?php echo "#" . $locations[$i]->pid; ?>").click(function() {
+        $("<?php echo "#" . $locations[$i]->pid . "_toggler"; ?>").toggle("slow", function(){
+            //Animation complete
+        });
+    });
     </script>
 
 <?php } ?>
@@ -548,8 +621,8 @@ function removeshortflat(ids){
     <div class="container2" style="float:left;clear:left;display:none;" id="<?php echo $locations1[$i]->pid ."_toggler";?>">
         <div id="<?php echo $locations1[$i]->pid . "hider"; ?>">
   <div style="float:right;width:44.19%;height:70%;background:black;">
-  <font size="6" color="#11A7F6">
-  <?php echo $locations1[$i]->bhk_type . "BHK FLAT";?> 
+  <font size="5" color="#11A7F6" style="margin-top:2%;">
+  <?php echo $locations[$i]->bhk_type . "BHK FLAT";?> 
   </font>
   <button type="button" id="<?php echo $locations1[$i]->pid . "hide";?>" class="btn btn-lg btn-danger" data-container="body" style="float:right;" onclick="hide('<?php echo $locations1[$i]->pid;?>')") >Map View</button>
   <button type="button" class="btn btn-lg btn-danger" data-container="body" style="float:right;" onclick="removeshortflat('<?php echo $locations1[$i]->pid;?>')") >Remove Shortlist</button>
@@ -728,7 +801,7 @@ function removeshortflat(ids){
   <div style="height:50%;float:left;">
   <div style="width:49%;float:left;">
   <font color="white">
-  <font size="6">
+  <font size="4" style="font-weight:bold;">
   Nearest Markets
   </font>
   <table class="<?php echo $locations1[$i]->pid . "table";?>" id="<?php echo "shoppingview" . $locations1[$i]->pid;?>">
@@ -745,7 +818,7 @@ function removeshortflat(ids){
   </div>
   <div style="width:50%;float:left;margin-left:1%;">
   <font color="white">
-  <font size="6">
+  <font size="4" style="font-weight:bold;">
   Nearest ATM's
   </font>
   <table class="<?php echo $locations1[$i]->pid . "table";?>" id="<?php echo "atmview" . $locations1[$i]->pid;?>">
@@ -764,7 +837,7 @@ function removeshortflat(ids){
   <div style="height:50%;float:left;">
   <div style="width:49%;float:left;">
   <font color="white">
-  <font size="6">
+  <font size="4" style="font-weight:bold;">
   Nearest Metro's
   </font>
   <table class="<?php echo $locations1[$i]->pid . "table";?>" id="<?php echo "metroview" . $locations1[$i]->pid;?>">
@@ -781,7 +854,7 @@ function removeshortflat(ids){
   </div>
   <div style="width:50%;float:left;margin-left:1%;">
   <font color="white">
-  <font size="6">
+  <font size="4" style="font-weight:bold;">
   Nearest Restaurants
   </font>
   <table class="<?php echo $locations1[$i]->pid . "table";?>" id="<?php echo "restaurantview" . $locations1[$i]->pid;?>">
@@ -885,6 +958,49 @@ function removeshortflat(ids){
     </script>
 <?php }?>
 </div>
+</div>
+<div style="float:left;min-height:900px;max-height:7000px;width:18%;background-color:#EFEFF2;">
+<button type="button" id="listpopup" class="btn btn-lg btn-primary" data-container="body" style="height:65px;width:100%;"data-toggle="popover" title="List your Property" data-placement="bottom" >
+Site Visit Form
+</button>
+<br>
+<br>
+<div id="shortlistedprop" style="margin-left:5%;">
+<h5 style="margin-letf:10px;">Your shortlisted properties</h5>
+</div>
+<br>
+<div class="container" id="sitevisitform" title="Sitevisit" style="width:90%;">
+    <div class="row">
+        <div id="sitevisitformdiv">
+        <form id="sitevisitformmain" method="post" >
+        <div class="form-group">
+            <input type="text" class="form-control" name="name" id="name5" placeholder="Name" size="20"/>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" name="username" id="username5" placeholder="Email" size="20"/>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" name="phoneno" id="phoneno5" placeholder="Phone Number">
+        </div>
+        <div class="form-group">
+            <input id="datepicker1" type="text" class="form-control datepicker" name="date" placeholder="Pick Up Date">
+        </div> 
+        <div class="input-append bootstrap-timepicker form-group">
+            <input id="timepicker1" type="text" class="input-small form-control" placeholder="Pick Up Time">
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" name="point" id="pickpoint5" placeholder="Pick Up Point">
+        </div>
+        <div class="form-group">
+            <button type="button" onclick="makesitevisit()" class="btn btn-danger">Visit</button>
+        </div> 
+        </form>
+    </div>
+    </div>
+</div>
+<script type="text/javascript">
+$('#timepicker1').timepicker();
+</script>
 </div>
 </div>
 <div id="footer">
@@ -1028,6 +1144,53 @@ $(document).ready(function() {
                 validators: {
                     notEmpty: {
                         message: 'The password is required and can\'t be empty'
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#sitevisitformmain').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            name: {
+                validators: {
+                    notEmpty: {
+                        message: 'The Name is required and can\'t be empty'
+                    }
+                }
+            },
+            phoneno:{
+                validators: {
+                    notEmpty: {
+                        message: 'Phone no is required and can\'t be empty'
+                    },
+                    stringLength: {
+                        min: 10,
+                        max: 10,
+                        message: 'The phone number should consist of 10 digits'
+                    },
+                    digits: {
+                        message: 'Phone number should consists of digits only'
+                    }
+                }
+            },
+            username: {
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {
+                        message: 'The Email is required and can\'t be empty'
+                    },        
+                    emailAddress: {
+                        message: 'The value is not a valid email address'
                     }
                 }
             }

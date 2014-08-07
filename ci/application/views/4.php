@@ -40,6 +40,7 @@ function addshort1(ids){
 		data: {pid: ids}
 	})
 		.done(function(value){
+			alert(value);
 			if(value == "success"){
 				var elements = document.getElementsByClassName(classn);
 				for(i=0;i<elements.length;i++){
@@ -146,6 +147,9 @@ function show(ids){
 	$(g).hide();
 	$(h).show();
 }
+function close(ids){
+	document.getElementById(ids).click();
+}
 </script>
 </head>
 <body>
@@ -158,7 +162,8 @@ function show(ids){
 	<font size="6" color="#11A7F6">
 	<?php echo $locations[$i]->seeking_a; ?> PG
 	</font>
-	<button type="button" id="<?php echo $locations[$i]->pid . "hide";?>" class="btn btn-lg btn-danger" data-container="body" style="float:right;" onclick="hide('<?php echo $locations[$i]->pid;?>')") >Map View</button>
+	<img src="../../static/images/close.png" style="float:right;" onclick="close('<?php echo $locations[$i]->pid; ?>')">
+	<button type="button" id="<?php echo $locations[$i]->pid . "hide";?>" class="btn btn-lg btn-danger" data-container="body" style="float:right;margin-right:2px;" onclick="hide('<?php echo $locations[$i]->pid;?>')") >Map View</button>
 	<button type="button" onclick="fun('<?php echo $locations[$i]->pid; ?>')" class="btn btn-lg btn-danger <?php echo $locations[$i]->pid . "shorter"; ?>" data-container="body" style="float:right;" data-toggle="popover" title="Login" data-placement="bottom" ><?php if($locations[$i]->short == "no"){ ?>Shortlist<?php }else{ ?>Remove Shortlist<?php } ?></button>
 	<br>
 	<br>

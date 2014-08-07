@@ -184,5 +184,21 @@ class Users extends CI_Model{
 		$result = $this->db->get();
 		return $result;
 	}
+	function gethistoryinfo($cusid){
+		$this->db->select('*');
+		$this->db->from('customerhistory');
+		$this->db->where_in('customerid',$cusid);
+		$result = $this->db->get();
+		return $result;
+	}
+	function createhistory($cusid,$shortpg,$shortflat){
+		$data = array("customerid" => $cusid, "shortpg" => $shortpg, "shortflat" => $shortflat);
+		$this->db->insert("customerhistory",$data);
+	}
+	function updatehistory($cusid,$shortpg,$shortflat){
+		$data = array("shortpg"=>$shortpg,"shortflat"=>$shortflat);
+		$this->db->where('customerid',$cusid);
+		$this->db->update('customerhistory',$data);
+	}
 }
 ?>

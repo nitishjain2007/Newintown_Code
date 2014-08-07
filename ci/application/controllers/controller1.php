@@ -188,8 +188,30 @@ class Controller1 extends CI_Controller{
 		}
 	}
 	}
+	function checkifshort(){
+		if(!isset($_COOKIE["session"])){
+			echo "failure";
+		}
+		else{
+			$user = $_COOKIE['newuser'];
+    		$this->load->model("users");
+    		$f = $this->users->retrievedata($user);
+    		foreach($f->result() as $i){
+    			$userdata = $i;
+    		}
+    		if(($userdata->shortpg == NULL || $userdata->shortpg == "")&&($userdata->shortflat==NULL || $userdata->shortflat=="")){
+    			echo "failure";
+    		}
+    		else{
+    			echo "success";
+    		}
+		}
+	}
 	function logout(){
                 delete_cookie("log");
+	}
+	function yourshortlist(){
+		$customerid = $_GET["id"];
 	}
 	function validate(){
 		$username = $_POST["username"];
@@ -253,7 +275,6 @@ class Controller1 extends CI_Controller{
 		$this->load->model('users');
 		if(!$this->input->cookie('session')){
 			$sessionname = $this->users->getcurrentsession();
-			echo $sessionname;
                         $cookie = array(
                         'name'   => 'session',
                         'value'  => $sessionname,
@@ -365,7 +386,7 @@ class Controller1 extends CI_Controller{
 		}
 	}
 	function getcurrentshortlistedpg(){
-		if($_COOKIE['session']){
+		if(isset($_COOKIE['session'])){
 			$this->load->model('users');
 			$f = $this->users->getsessioninfo($_COOKIE["session"]);
 			foreach($f->result() as $i){
@@ -376,6 +397,39 @@ class Controller1 extends CI_Controller{
 		else{
 			echo "false";
 		}
+	}
+	function yourshortlisted(){
+		$userid = $_GET["userid"];
+		$this->load->model('users');
+		$f = $this->users->gethistoryinfo($userid);
+		foreach($f->result() as $i){
+			$shortedpg = $i->shortpg;
+			$shortedflat = $i->shortflat;
+		}
+		$shorted = explode(",",$shortedpg);
+		$shorted1 = explode(",",$shortedflat);
+		$shortedpg1 = $this->users->getshort($shorted);
+		$shortedflat1 = $this->users->getshortflat($shorted1);
+		$list = array();
+		$list1 = array();
+		foreach($shortedpg1->result() as $i){
+			$list[] = $i;
+		}
+		foreach($shortedflat1->result() as $i){
+			$list1[] = $i;
+		}
+		for($i=0;$i<count($list);$i++){
+			$temp = explode(",",$list[$i]->gps);
+			$list[$i]->lati = $temp[0];
+			$list[$i]->longi = $temp[1];
+		}
+		for($i=0;$i<count($list1);$i++){
+			$temp = explode(",",$list1[$i]->gps);
+			$list1[$i]->lati = $temp[0];
+			$list1[$i]->longi = $temp[1];
+		}
+		$data = array("locations" => $list,"locations1" => $list1);
+		$this->load->view("yourshortlisted",$data);
 	}
 	function getcurrentshortlistedflat(){
 		if($_COOKIE['session']){
@@ -407,9 +461,12 @@ class Controller1 extends CI_Controller{
 			echo "failure";
 		}
 		else{
-			$f = $this->users->getsessioninfo($_COOKIE["session"]);
+			if(isset($_COOKIE["session"])){
+				$f = $this->users->getsessioninfo($_COOKIE["session"]);
+			}
 			$shortpg = "";
 			$shortflat = "";
+			if(isset($_COOKIE["session"])){
 			foreach ($f->result() as $i){
 				if(!empty($i->shortpg)){
 					$shortpg = $i->shortpg;
@@ -418,11 +475,35 @@ class Controller1 extends CI_Controller{
 					$shortflat = $i->shortflat;
 				}
 			}
+			}
 			if($shortflat == "" && $shortpg == ""){
 				echo "wrong";
 			}
 			else{
 				$this->users->createsitevisit($name,$username,$phone,$pickdate,$picktime,$pickplace,$shortpg,$shortflat);
+				$cusid = $name . $username . $phone ;
+				$cusid4 = md5($cusid);
+				$f = $this->users->gethistoryinfo($cusid4);
+				$j = 0;
+				$shortpg4 = "";
+				$shortflat4 = "";
+				foreach($f->result() as $i){
+					$j = $j + 1;
+					if(!empty($i->shortpg)){
+						$shortpg4 = $i->shortpg;
+					}
+					if(!empty($i->shortflat)){
+						$shortflat4 = $i->shortflat;
+					}
+				}
+				if($j==1){
+					$shortpg5 = $shortpg . $shortpg4;
+					$shortflat5 = $shortflat . $shortflat4;
+					$this->users->updatehistory($cusid4,$shortpg5,$shortflat5); 
+				}
+				else{
+					$this->users->createhistory($cusid4,$shortpg,$shortflat);
+				}
 				echo "success";
 			}
 		}
