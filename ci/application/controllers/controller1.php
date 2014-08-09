@@ -271,9 +271,15 @@ class Controller1 extends CI_Controller{
 		$this->load->model('users');
 		if(!$this->input->cookie('session')){
 			$sessionname = $this->users->getcurrentsession();
-			setcookie("session",$sessionname, time()+3600*24,'/');
-		        //$_COOKIE['session'] = $sessionname;
-			//$this->input->cookie('session') = $sessionname
+                        $cookie = array(
+                        'name'   => 'session',
+                        'value'  => $sessionname,
+                        'expire' => '1000000',
+                        'path'   => '/',
+                        'prefix' => '',
+	                );
+        		$this->input->set_cookie($cookie);
+		        $_COOKIE['session'] = $sessionname;
 			$this->users->addsession($sessionname);
 		}
 		$sessionname = $_COOKIE['session'];

@@ -64,6 +64,9 @@ background: #00688B;
 height: 44px;
 color: white;
 }
+.glyphicon-star{
+    color:yellow;
+}
 </style>
 
 <script>
@@ -171,7 +174,7 @@ function show(ids){
         $(h).show();
 }
 function removeshort(ids){
-	var hider1 = '#' + ids;
+	var hider1 = '#' + ids + "tog";
 	var hider2 = '#' + ids + '_toggler';
         $.ajax({
                 type: "POST",
@@ -186,7 +189,7 @@ function removeshort(ids){
 		});
 }
 function removeshortflat(ids){
-    var hider1 = '#' + ids;
+    var hider1 = '#' + ids + "tog";
     var hider2 = '#' + ids + '_toggler';
         $.ajax({
             type: "POST",
@@ -382,20 +385,19 @@ function closecurrentdiv(ids){
 </div>
 <div id="div1">
 <?php for($i=0;$i<count($locations);$i++){?>
-    <div id="<?php echo $locations[$i]->pid; ?>" style="float:left;margin-top: 15px;" onclick="initdelay(this.id)">
-	
-	<div class="house">
-                <img src="../../static/images/home.png" alt="Smiley face" width="30" height="32" style="margin-top:-2px;/* top: 100px; */">
-                &nbsp;&nbsp;&nbsp;Rs.6000
-                <span class="glyphicon glyphicon-star" font-size="6" style="float:right;padding-left: 10px;padding-right: 10px;cursor:pointer;font-size:150%;" onclick="fun('<?php echo $locations[$i]->pid; ?>')"></span>
-                <span style="float: right;background: #47a447;padding-left: 10px;padding-right: 10px;border-radius: 4px;"> Boys </span>
-        </div>
-	<img src="<?php echo $locations[$i]->image_1; ?>" style='margin-left:15px;margin-top:15px;' height="200px" width="320px">
-	<div style="margin-left: 15px;padding: 4px;width: 320px;background: white;border: 1px solid rgb(214, 210, 210);font-size: 12px;">
-          Sharing: <span style="color: green;"> Single sharing </span>
-         <br> 
-          Location :Sector 27
-        </div>
+    <div style="float:left;margin-top: 15px;" id="<?php echo $locations[$i]->pid . "tog"; ?>" onclick="initdelay('<?php echo $locations[$i]->pid; ?>')">
+    <div class="house">
+        <img src="../../static/images/home.png" alt="Smiley face" width="30" height="32" style="margin-top:-2px;/* top: 100px; */">
+        &nbsp;&nbsp;&nbsp;Rs.<?php echo $locations[$i]->rent; ?>
+        <span class="glyphicon glyphicon-star" font-size="6" style="float:right;padding-left: 10px;padding-right: 10px;cursor:pointer;font-size:150%;" onclick="removeshort('<?php echo $locations[$i]->pid; ?>')" id="<?php echo $locations[$i]->pid . "star" ;?>"></span>
+        <span style="float: right;background: #47a447;padding-left: 10px;padding-right: 10px;border-radius: 4px;"> <?php echo $locations[$i]->seeking_a; ?> </span>
+    </div>
+    <img src="<?php echo $locations[$i]->image_1; ?>" style='margin-left:15px;margin-top:40px;cursor:pointer;' height="200px" width="320px" id="<?php echo $locations[$i]->pid; ?>">
+    <div style="margin-left: 15px;padding: 4px;width: 320px;background: white;border: 1px solid rgb(214, 210, 210);font-size: 12px;"> 
+      Sharing: <span style="color: green;"> <?php echo ucfirst($locations[$i]->sharing_type); ?> Sharing</span>
+     <br>
+      Location :<?php echo $locations[$i]->area; ?> 
+    </div>
     </div>
     <div class="container2" style="float:left;clear:left;display:none;" id="<?php echo $locations[$i]->pid ."_toggler";?>">
         <div id="<?php echo $locations[$i]->pid . "hider"; ?>">
@@ -734,7 +736,19 @@ function closecurrentdiv(ids){
 
 <?php } ?>
 <?php for($i=0;$i<count($locations1);$i++){?>
-    <div id="<?php echo $locations1[$i]->pid; ?>" style="float:left;" onclick="initdelay(this.id)"><img src="<?php echo $locations1[$i]->image_1; ?>" height="100px" width="100px">
+    <div style="float:left;margin-top: 15px;" id="<?php echo $locations1[$i]->pid . "tog"; ?>" onclick="initdelay('<?php echo $locations1[$i]->pid; ?>')">
+    <div class="house">
+                <img src="../../static/images/home.png" alt="Smiley face" width="30" height="32" style="margin-top:-2px;/* top: 100px; */">
+                &nbsp;&nbsp;&nbsp;Rs.<?php echo $locations1[$i]->rent; ?>
+                <span class="glyphicon glyphicon-star" font-size="6" style="float:right;padding-left: 10px;padding-right: 10px;cursor:pointer;font-size:150%;" onclick="removeshortflat('<?php echo $locations1[$i]->pid; ?>')" id="<?php echo $locations1[$i]->pid . "star" ;?>"></span>
+                <span style="float: right;background: #47a447;padding-left: 10px;padding-right: 10px;border-radius: 4px;"> <?php echo $locations1[$i]->bhk_type; ?>BHK </span>
+        </div>
+    <img src="<?php echo $locations1[$i]->image_1; ?>" id="<?php echo $locations1[$i]->pid; ?>" style='margin-left:15px;margin-top:40px;cursor:pointer;' height="200px" width="320px">
+    <div style="margin-left: 15px;padding: 4px;width: 320px;background: white;border: 1px solid rgb(214, 210, 210);font-size: 12px;">
+          Furnishing: <span style="color: green;"> <?php echo $locations1[$i]->furnishing_type; ?> </span>
+         <br>
+          Location :<?php echo $locations1[$i]->area; ?>
+        </div>
     </div>
     <div class="container2" style="float:left;clear:left;display:none;" id="<?php echo $locations1[$i]->pid ."_toggler";?>">
         <div id="<?php echo $locations1[$i]->pid . "hider"; ?>">
@@ -794,7 +808,7 @@ function closecurrentdiv(ids){
   <?php if($locations1[$i]->ac == "n" || $locations1[$i]->ac == ""){ ?>
   <font size="2" color="grey">AC</font>
   <?php }else{ ?>
-  <font size="2" color="#3C763D" style="font-weight:bold;">AC: <?php echo $locations[$i]->ac;?></font>
+  <font size="2" color="#3C763D" style="font-weight:bold;">AC: <?php echo $locations1[$i]->ac;?></font>
   <?php } ?>
   </td>
   <td>
@@ -878,7 +892,7 @@ function closecurrentdiv(ids){
   <ul class="image_slide" id="<?php echo $locations1[$i]->pid . "_slider" ; ?>">
   <?php for($j=1;$j<=14;$j++){
     $imageno = "image_" . $j;
-    if($locations[$i]->$imageno != ""){?>
+    if($locations1[$i]->$imageno != ""){?>
       <li style="width: 700px;"><img src="<?php echo $locations1[$i]->$imageno ;?>"></li>
     <?php }
   }?>
