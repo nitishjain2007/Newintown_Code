@@ -76,7 +76,7 @@ function giveresult(){
     }
     else{
     var type = "pg";
-    window.location="http://newintown.in/ci/index.php/controller1/query?lng="+lng+"&lat="+lat+"&type="+type;
+    window.location="http://localhost/ci/index.php/controller1/query?lng="+lng+"&lat="+lat+"&type="+type;
 }
 }
 function makesitevisit(){
@@ -407,7 +407,7 @@ function advancechange(){
 function changetopg(){
     var lng = '<?php echo $lng; ?>';
     var lat = '<?php echo $lat; ?>';
-    window.location="http://newintown.co.in/ci/index.php/controller1/query?lng="+ lng + "&lat=" + lat + "&type=pg";
+    window.location="http://localhost/ci/index.php/controller1/query?lng="+ lng + "&lat=" + lat + "&type=pg";
 }
 function changecontent(){
 	$('#div1').hide();

@@ -266,19 +266,14 @@ class Controller1 extends CI_Controller{
 		$this->users->addshortpidflat($sessionname,$short);
 	}
 	function addshort(){
+		//$this->load->helper('cookie');
 		$pid = $_POST["pid"];
 		$this->load->model('users');
 		if(!$this->input->cookie('session')){
 			$sessionname = $this->users->getcurrentsession();
-                        $cookie = array(
-                        'name'   => 'session',
-                        'value'  => $sessionname,
-                        'expire' => '1000000',
-                        'path'   => '/',
-                        'prefix' => '',
-	                );
-        		$this->input->set_cookie($cookie);
-		        $_COOKIE['session'] = $sessionname;
+			setcookie("session",$sessionname, time()+3600*24,'/');
+		        //$_COOKIE['session'] = $sessionname;
+			//$this->input->cookie('session') = $sessionname
 			$this->users->addsession($sessionname);
 		}
 		$sessionname = $_COOKIE['session'];
@@ -307,7 +302,6 @@ class Controller1 extends CI_Controller{
 		$this->load->model('users');
 		if(!$this->input->cookie('session')){
 			$sessionname = $this->users->getcurrentsession();
-			echo $sessionname;
                         $cookie = array(
                         'name'   => 'session',
                         'value'  => $sessionname,
@@ -383,7 +377,7 @@ class Controller1 extends CI_Controller{
 	function getcurrentshortlistedpg(){
 		if(isset($_COOKIE['session'])){
 			$this->load->model('users');
-			$f = $this->users->getsessioninfo($_COOKIE["session"]);
+			$f = $this->users->getsessioninfo($_COOKIE['session']);
 			foreach($f->result() as $i){
 				$shorted = $i->shortpg;
 			}
@@ -498,6 +492,10 @@ class Controller1 extends CI_Controller{
 				}
 				else{
 					$this->users->createhistory($cusid4,$shortpg,$shortflat);
+					$subject = "Site visit confirmation";
+					$message = "http://newintown.in/ci/index.php/controller1/yourshortlisted?userid='$cusid4'";
+					$mail_headers = "From: contact@newintown.co.in\r\nReply-To: contact@newintown.co.in";
+					mail( 'guptaanish11@gmail.com', $subject, $message, $mail_headers );
 				}
 				echo "success";
 			}

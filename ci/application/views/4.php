@@ -2,6 +2,28 @@
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="../../static/css/slider.css">
+<style>
+.house{
+/* background-position: 102px 0; */
+/* width: 30px; */
+/* height: 29px; */
+/* display: inline-block; */
+/* margin-top: -2px; */
+/* margin-right: 5px; */
+/* float: left; */
+position: absolute;
+width: 320px;
+margin-left: 15px;
+padding: 7px;
+background: #00688B;
+height: 44px;
+color: white;
+}
+.glyphicon-star{
+	color:yellow;
+}
+</style>
+
 <script>
 function test1(){
 	$(".container2").toggle("fast", function(){
@@ -63,9 +85,13 @@ function fun(ids){
 	var f = elements[0].innerHTML;
 	if(f == "Remove Shortlist"){
 		removeshort1(ids);
+		var star = ids + "star";
+		document.getElementById(star).className = "glyphicon glyphicon-star-empty"; 
 	}
 	else{
 		addshort1(ids);
+		var star = ids + "star";
+		document.getElementById(star).className = "glyphicon glyphicon-star";
 	}
 }
 function closedialog(ids){
@@ -155,7 +181,19 @@ function closecurrentdiv(ids){
 </head>
 <body>
 <?php for($i=0;$i<count($locations);$i++){?>
-    <div id="<?php echo $locations[$i]->pid; ?>" style="float:left;" onclick="initdelay(this.id)"><img src="<?php echo $locations[$i]->image_1; ?>" height="100px" width="100px">
+    <div style="float:left;margin-top: 15px;" onclick="initdelay(this.id)">
+	<div class="house">
+		<img src="../../static/images/home.png" alt="Smiley face" width="30" height="32" style="margin-top:-2px;/* top: 100px; */">
+  		&nbsp;&nbsp;&nbsp;Rs.<?php echo $locations[$i]->rent; ?>
+  		<span <?php if($locations[$i]->short == "no"){?> class="glyphicon glyphicon-star-empty" <?php }else{ ?>class="glyphicon glyphicon-star" <?php } ?> font-size="6" style="float:right;padding-left: 10px;padding-right: 10px;cursor:pointer;font-size:150%;" onclick="fun('<?php echo $locations[$i]->pid; ?>')" id="<?php echo $locations[$i]->pid . "star" ;?>"></span>
+		<span style="float: right;background: #47a447;padding-left: 10px;padding-right: 10px;border-radius: 4px;"> <?php echo $locations[$i]->seeking_a; ?> </span>
+	</div>
+	<img src="<?php echo $locations[$i]->image_1; ?>" style='margin-left:15px;margin-top:15px;' height="200px" width="320px" id="<?php echo $locations[$i]->pid; ?>">
+   	<div style="margin-left: 15px;padding: 4px;width: 320px;background: white;border: 1px solid rgb(214, 210, 210);font-size: 12px;"> 
+	  Sharing: <span style="color: green;"> <?php echo ucfirst($locations[$i]->sharing_type); ?> Sharing</span>
+ 	 <br>
+	  Location :<?php echo $locations[$i]->area; ?> 
+	</div>
     </div>
     <div class="container2" style="float:left;clear:left;display:none;" id="<?php echo $locations[$i]->pid ."_toggler";?>">
         <div id="<?php echo $locations[$i]->pid . "hider"; ?>">

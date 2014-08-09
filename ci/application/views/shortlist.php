@@ -46,6 +46,26 @@
     display: none;
 }
 </style>
+
+<style>
+.house{
+/* background-position: 102px 0; */
+/* width: 30px; */
+/* height: 29px; */
+/* display: inline-block; */
+/* margin-top: -2px; */
+/* margin-right: 5px; */
+/* float: left; */
+position: absolute;
+width: 320px;
+margin-left: 15px;
+padding: 7px;
+background: #00688B;
+height: 44px;
+color: white;
+}
+</style>
+
 <script>
 $(function() {
 $('.datepicker').datepicker();
@@ -362,7 +382,20 @@ function closecurrentdiv(ids){
 </div>
 <div id="div1">
 <?php for($i=0;$i<count($locations);$i++){?>
-    <div id="<?php echo $locations[$i]->pid; ?>" style="float:left;" onclick="initdelay(this.id)"><img src="<?php echo $locations[$i]->image_1; ?>" height="100px" width="100px">
+    <div id="<?php echo $locations[$i]->pid; ?>" style="float:left;margin-top: 15px;" onclick="initdelay(this.id)">
+	
+	<div class="house">
+                <img src="../../static/images/home.png" alt="Smiley face" width="30" height="32" style="margin-top:-2px;/* top: 100px; */">
+                &nbsp;&nbsp;&nbsp;Rs.6000
+                <span class="glyphicon glyphicon-star" font-size="6" style="float:right;padding-left: 10px;padding-right: 10px;cursor:pointer;font-size:150%;" onclick="fun('<?php echo $locations[$i]->pid; ?>')"></span>
+                <span style="float: right;background: #47a447;padding-left: 10px;padding-right: 10px;border-radius: 4px;"> Boys </span>
+        </div>
+	<img src="<?php echo $locations[$i]->image_1; ?>" style='margin-left:15px;margin-top:15px;' height="200px" width="320px">
+	<div style="margin-left: 15px;padding: 4px;width: 320px;background: white;border: 1px solid rgb(214, 210, 210);font-size: 12px;">
+          Sharing: <span style="color: green;"> Single sharing </span>
+         <br> 
+          Location :Sector 27
+        </div>
     </div>
     <div class="container2" style="float:left;clear:left;display:none;" id="<?php echo $locations[$i]->pid ."_toggler";?>">
         <div id="<?php echo $locations[$i]->pid . "hider"; ?>">
