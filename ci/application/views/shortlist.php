@@ -385,14 +385,14 @@ function closecurrentdiv(ids){
 </div>
 <div id="div1">
 <?php for($i=0;$i<count($locations);$i++){?>
-    <div style="float:left;margin-top: 15px;" id="<?php echo $locations[$i]->pid . "tog"; ?>" onclick="initdelay('<?php echo $locations[$i]->pid; ?>')">
+    <div style="float:left;margin-top: 15px;" id="<?php echo $locations[$i]->pid . "tog"; ?>">
     <div class="house">
         <img src="../../static/images/home.png" alt="Smiley face" width="30" height="32" style="margin-top:-2px;/* top: 100px; */">
         &nbsp;&nbsp;&nbsp;Rs.<?php echo $locations[$i]->rent; ?>
         <span class="glyphicon glyphicon-star" font-size="6" style="float:right;padding-left: 10px;padding-right: 10px;cursor:pointer;font-size:150%;" onclick="removeshort('<?php echo $locations[$i]->pid; ?>')" id="<?php echo $locations[$i]->pid . "star" ;?>"></span>
         <span style="float: right;background: #47a447;padding-left: 10px;padding-right: 10px;border-radius: 4px;"> <?php echo $locations[$i]->seeking_a; ?> </span>
     </div>
-    <img src="<?php echo $locations[$i]->image_1; ?>" style='margin-left:15px;margin-top:40px;cursor:pointer;' height="200px" width="320px" id="<?php echo $locations[$i]->pid; ?>">
+    <img src="<?php echo $locations[$i]->image_1; ?>" style='margin-left:15px;margin-top:40px;cursor:pointer;' height="200px" width="320px" id="<?php echo $locations[$i]->pid; ?>"  onclick="initdelay('<?php echo $locations[$i]->pid; ?>')">
     <div style="margin-left: 15px;padding: 4px;width: 320px;background: white;border: 1px solid rgb(214, 210, 210);font-size: 12px;"> 
       Sharing: <span style="color: green;"> <?php echo ucfirst($locations[$i]->sharing_type); ?> Sharing</span>
      <br>
@@ -736,14 +736,14 @@ function closecurrentdiv(ids){
 
 <?php } ?>
 <?php for($i=0;$i<count($locations1);$i++){?>
-    <div style="float:left;margin-top: 15px;" id="<?php echo $locations1[$i]->pid . "tog"; ?>" onclick="initdelay('<?php echo $locations1[$i]->pid; ?>')">
+    <div style="float:left;margin-top: 15px;" id="<?php echo $locations1[$i]->pid . "tog"; ?>">
     <div class="house">
                 <img src="../../static/images/home.png" alt="Smiley face" width="30" height="32" style="margin-top:-2px;/* top: 100px; */">
                 &nbsp;&nbsp;&nbsp;Rs.<?php echo $locations1[$i]->rent; ?>
                 <span class="glyphicon glyphicon-star" font-size="6" style="float:right;padding-left: 10px;padding-right: 10px;cursor:pointer;font-size:150%;" onclick="removeshortflat('<?php echo $locations1[$i]->pid; ?>')" id="<?php echo $locations1[$i]->pid . "star" ;?>"></span>
                 <span style="float: right;background: #47a447;padding-left: 10px;padding-right: 10px;border-radius: 4px;"> <?php echo $locations1[$i]->bhk_type; ?>BHK </span>
         </div>
-    <img src="<?php echo $locations1[$i]->image_1; ?>" id="<?php echo $locations1[$i]->pid; ?>" style='margin-left:15px;margin-top:40px;cursor:pointer;' height="200px" width="320px">
+    <img src="<?php echo $locations1[$i]->image_1; ?>" id="<?php echo $locations1[$i]->pid; ?>" style='margin-left:15px;margin-top:40px;cursor:pointer;' height="200px" width="320px" onclick="initdelay('<?php echo $locations1[$i]->pid; ?>')">
     <div style="margin-left: 15px;padding: 4px;width: 320px;background: white;border: 1px solid rgb(214, 210, 210);font-size: 12px;">
           Furnishing: <span style="color: green;"> <?php echo $locations1[$i]->furnishing_type; ?> </span>
          <br>
