@@ -339,7 +339,6 @@ var furnishingtype = "all";
 var sharingtype = "all";
 var advance = "";
 function furnishingchange(ids){
-	alert("hi");
     var clicked = document.getElementById(ids);
     if(clicked.className == "btn btn-default"){
         clicked.className = "btn btn-primary";
@@ -349,7 +348,6 @@ function furnishingchange(ids){
     }
     window["furnishingtype"] = "";
     for(i=0;i<furnishing.length;i++){
-    	alert(furnishing[i]);
         var temp = document.getElementById(furnishing[i]);
         if(temp.className == "btn btn-primary"){
             window["furnishingtype"] = window["furnishingtype"] + "," + furnishing[i];
@@ -358,7 +356,7 @@ function furnishingchange(ids){
     if(window["furnishingtype"]!=""){
         window["furnishingtype"] = window["furnishingtype"].substr(1);
     }
-    //alert(window["furnishingtype"]);
+    window["furnishingtype"] = window["furnishingtype"].replace(/\ /g, "]");
     changecontent();
 }
 function sharingchange(ids){

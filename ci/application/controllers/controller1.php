@@ -50,7 +50,7 @@ class Controller1 extends CI_Controller{
 		$list = array();
 		foreach ($f->result() as $i){
 			$temp = explode(',',$i->gps);
-			if($this->_calculate($temp[1],$temp[0],$lng,$lat) <=5){
+			if($this->_calculate($temp[1],$temp[0],$lng,$lat) <=2){
 				$list[] = $i;
 			}
 		}
@@ -536,7 +536,8 @@ class Controller1 extends CI_Controller{
 	function five(){
 		$lng = $_GET["lng"];
 		$lat = $_GET["lat"];
-		$furniture = $_GET["furnishing"];
+		$furniture1 = $_GET["furnishing"];
+		$furniture = str_replace("]"," ",$furniture1);
 		$sharing = $_GET["sharing"];
 		$advance = "";
 		$user = $_GET["user"];
